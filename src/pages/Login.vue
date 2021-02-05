@@ -13,12 +13,11 @@
       v-model="password"
       placeholder="password"
     />
-    <button @click="register">Login</button>
+    <button @click="login">Login</button>
   </div>
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthenticationService'
 export default {
   data () {
     return {
@@ -27,7 +26,7 @@ export default {
     }
   },
   methods: {
-    async register () {
+    async login () {
       console.log(this.email, this.password)
     }
   }
