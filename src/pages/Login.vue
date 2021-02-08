@@ -51,7 +51,7 @@ export default {
 
 .sign-in-wrapper {
     width: 600px;
-    margin-top: 100px;
+    margin-top: 150px;
 }
 
 .title {
