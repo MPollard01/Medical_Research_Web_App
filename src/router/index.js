@@ -4,6 +4,8 @@ import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import RegisterConfirmation from '@/pages/RegisterConfirmation'
+import PasswordReset from '@/pages/PasswordReset'
+import PasswordResetComplete from '@/pages/PasswordResetComplete'
 
 Vue.use(Router)
 
@@ -28,6 +30,16 @@ export default new Router({
       path: '/register-confirmation',
       name: 'RegisterConfrimation',
       component: RegisterConfirmation
+    },
+    {
+      path: '/reset-password',
+      name: 'PasswordReset',
+      component: PasswordReset
+    },
+    {
+      path: '/reset-password-complete',
+      name: 'PasswordResetComplete',
+      component: PasswordResetComplete
     }
   ]
 })
