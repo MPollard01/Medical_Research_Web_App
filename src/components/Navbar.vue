@@ -2,9 +2,9 @@
   <div class="navbar-wrapper">
       <h1 class="title">Cardiomyopathy Platform</h1>
       <div class="navbar-links">
-          <div @click="updatePath('/home')" class="navbar-link">
-              <router-link to="home" class="link">Home</router-link>
-              <div class="active" v-if="path === '/home'" />
+          <div @click="updatePath('/')" class="navbar-link">
+              <router-link to="/" class="link">Home</router-link>
+              <div class="active" v-if="path === '/'" />
           </div>
           <div @click="updatePath('/login')" class="navbar-link">
               <router-link to="login" class="link">Login</router-link>
