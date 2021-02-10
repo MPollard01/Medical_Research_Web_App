@@ -1,85 +1,88 @@
 <template>
   <div class="navbar-wrapper">
-      <h1 class="title">Cardiomyopathy Platform</h1>
-      <div class="navbar-links">
-          <div @click="updatePath('/')" class="navbar-link">
-              <router-link to="/" class="link">Home</router-link>
-              <div class="active" v-if="path === '/'" />
-          </div>
-          <div @click="updatePath('/login')" class="navbar-link">
-              <router-link to="login" class="link">Login</router-link>
-              <div class="active" v-if="path === '/login'" />
-          </div>
-          <div @click="updatePath('/register')" class="navbar-link">
-              <router-link to="register" class="link">Register</router-link>
-              <div class="active" v-if="path === '/register' || path === '/register-confirmation'" />
-          </div>
+    <h1 class="title">Cardiomyopathy Platform</h1>
+    <div class="navbar-links">
+      <div @click="updatePath('/')" class="navbar-link">
+        <router-link to="/" class="link">Home</router-link>
+        <div class="active" v-if="path === '/'" />
       </div>
+      <div @click="updatePath('/login')" class="navbar-link">
+        <router-link to="login" class="link">Login</router-link>
+        <div class="active" v-if="path === '/login'" />
+      </div>
+      <div @click="updatePath('/register')" class="navbar-link">
+        <router-link to="register" class="link">Register</router-link>
+        <div
+          class="active"
+          v-if="path === '/register' || path === '/register-confirmation'"
+        />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      path: ''
-    }
+      path: ""
+    };
   },
   methods: {
-    updatePath (path) {
-      this.path = path
+    updatePath(path) {
+      this.path = path;
     }
   },
-  mounted () {
-    this.path = this.$router.currentRoute.path
+  mounted() {
+    this.path = this.$router.currentRoute.path;
   },
   watch: {
-    '$route' (to, from) {
-      this.path = this.$router.currentRoute.path
+    $route() {
+      this.path = this.$router.currentRoute.path;
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .navbar-wrapper {
-    width: calc(100% - 4rem);
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 60px;
-    padding: 1rem 2rem;
-    background-color: #727EAF;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  width: calc(100% - 4rem);
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 60px;
+  padding: 1rem 2rem;
+  background-color: #727eaf;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .title {
-    color: white;
-    font-size: 24px;
+  color: white;
+  font-size: 24px;
 }
 
 .navbar-links {
-    width: 15rem;
-    display: flex;
-    justify-content: space-between;
+  width: 15rem;
+  display: flex;
+  justify-content: space-between;
 }
 
 .navbar-link {
-    margin-top: 1rem;
+  margin-top: 1rem;
 }
 
 .link {
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 
 .active {
-    width: 100%;
-    height: 2px;
-    margin-top: 1rem;
-    background-color: #c28adb;
+  width: 100%;
+  height: 2px;
+  margin-top: 1rem;
+  background-color: #c28adb;
 }
 </style>
