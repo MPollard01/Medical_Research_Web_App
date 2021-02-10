@@ -24,7 +24,7 @@
             </div>
             <div v-if="showNextForm">
                 <p class="more-details">Please provide some more details...</p>
-                <p><i style="{margin-bottom: '1rem'}">Fields marked with an asterisk (<span class="asterisk"><b>*</b></span>) are required.</i></p>
+                <p><i>Fields marked with an asterisk (<span class="asterisk"><b>*</b></span>) are required.</i></p>
                 <br>
                 <span class="required">
                     <input
