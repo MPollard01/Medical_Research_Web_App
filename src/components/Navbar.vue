@@ -12,7 +12,7 @@
           </div>
           <div @click="updatePath('/register')" class="navbar-link">
               <router-link to="register" class="link">Register</router-link>
-              <div class="active" v-if="path === '/register'" />
+              <div class="active" v-if="path === '/register' || path === '/register-confirmation'" />
           </div>
       </div>
   </div>
@@ -32,8 +32,12 @@ export default {
   },
   mounted () {
     this.path = this.$router.currentRoute.path
+  },
+  watch: {
+    '$route' (to, from) {
+      this.path = this.$router.currentRoute.path
+    }
   }
-
 }
 </script>
 
