@@ -7,7 +7,7 @@ import RegisterConfirmation from '@/pages/RegisterConfirmation'
 import PasswordReset from '@/pages/PasswordReset'
 import PasswordResetComplete from '@/pages/PasswordResetComplete'
 
-Vue.use(Router)
+Vue.use(Router);
 
 export default new Router({
   routes: [
@@ -43,3 +43,8 @@ export default new Router({
     }
   ]
 })
+
+const router = new Router({
+  mode: "history",
+  routes
+});
