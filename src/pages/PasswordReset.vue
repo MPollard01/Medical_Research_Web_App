@@ -1,6 +1,9 @@
 <template>
   <div class="password-reset-page">
     <div class="password-reset-wrapper">
+      <div v-if="errorPasswordReset" class="error">
+        {{ errorPasswordReset }}
+      </div>
       <div v-if="!showSentConfirmation">
         <h1 class="title">Forgot your password?</h1>
         <p>Please enter your email below to request a password reset link...</p>
@@ -33,20 +36,41 @@
 </template>
 
 <script>
+import firebase from "firebase";
+
 export default {
-  data () {
+  data() {
     return {
-      email: '',
+      email: "",
+      errorPasswordReset: "",
       showSentConfirmation: false
-    }
+    };
   },
   methods: {
-    async requestPasswordReset () {
-      console.log(this.email)
-      this.showSentConfirmation = true
+    requestPasswordReset: async function() {
+      this.errorPasswordReset = null;
+      if (this.email == null || this.email == "") {
+        this.errorPasswordReset = "Please enter an email address";
+        return;
+      }
+
+      if (!this.errorPasswordReset) {
+        firebase
+          .auth()
+          .sendPasswordResetEmail(this.email)
+          .then(
+            async response => {
+              this.showSentConfirmation = true;
+            },
+            error => {
+              console.warn(error);
+              this.errorPasswordReset = error.message;
+            }
+          );
+      }
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -117,5 +141,11 @@ p {
 .bar {
   margin-top: 4rem;
   border-bottom: 2px solid #e8e8e8;
+}
+
+.error {
+  background-color: #d16565;
+  color: white;
+  padding: 10px;
 }
 </style>
