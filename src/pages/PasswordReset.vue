@@ -55,9 +55,16 @@ export default {
       }
 
       if (!this.errorPasswordReset) {
+        var domain =
+          "https://" + firebase.remoteConfig().app.options.authDomain;
+
+        var actionCodeSettings = {
+          url: domain + "/login"
+        };
+
         firebase
           .auth()
-          .sendPasswordResetEmail(this.email)
+          .sendPasswordResetEmail(this.email, actionCodeSettings)
           .then(
             async response => {
               this.showSentConfirmation = true;
