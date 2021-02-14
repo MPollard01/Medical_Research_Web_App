@@ -30,8 +30,9 @@ const router = new Router({
     },
     {
       path: "/register-confirmation",
-      name: "RegisterConfrimation",
-      component: RegisterConfirmation
+      name: "RegisterConfirmation",
+      component: RegisterConfirmation,
+      props: true
     },
     {
       path: "/reset-password",
