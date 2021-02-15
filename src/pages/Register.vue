@@ -159,13 +159,30 @@ export default {
           .createUserWithEmailAndPassword(info.email, info.password)
           .then(
             async userCredentials => {
-              await userCredentials.user.updateProfile({
+              var user = userCredentials.user;
+
+              await user.updateProfile({
                 name: info.name,
                 address: info.address,
                 phoneNumber: info.phoneNumber,
                 institution: info.institution
               });
-              this.$router.replace({ name: "RegisterConfrimation" });
+
+              var domain =
+                "https://" + firebase.remoteConfig().app.options.authDomain;
+
+              var actionCodeSettings = {
+                url: domain + "/login"
+              };
+
+              await user.sendEmailVerification(actionCodeSettings);
+
+              this.$router.replace({
+                name: "RegisterConfirmation",
+                params: {
+                  user
+                }
+              });
             },
             error => {
               this.errorRegistration = error.message;
