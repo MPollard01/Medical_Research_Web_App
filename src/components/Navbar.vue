@@ -23,11 +23,17 @@
           v-if="path === '/register' || path === '/register-confirmation'"
         />
       </div>
+      <div class="navbar-link" @click="logout">
+        <router-link to="login" class="link"
+          >Logout</router-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import authenticationService from '@/services/AuthenticationService';
+
 export default {
   data() {
     return {
@@ -37,6 +43,9 @@ export default {
   methods: {
     updatePath(path) {
       this.path = path;
+    },
+    logout () {
+        authenticationService.logout();
     }
   },
   mounted() {

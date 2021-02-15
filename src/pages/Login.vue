@@ -1,6 +1,9 @@
 <template>
     <div class="login-page">
        <div class="sign-in-wrapper">
+           <div v-if="errorRegistration" class="error">
+                {{ errorRegistration }}
+            </div>
             <h1 class="title">Sign in</h1>
             <input
             type="email"
@@ -26,16 +29,41 @@
 </template>
 
 <script>
+import validation from "@/utils/Validation";
+import authenticationService from '@/services/AuthenticationService';
+
 export default {
   data () {
     return {
-      email: '',
-      password: ''
+      email: "",
+      password: "",
+      errorRegistration: ""
     }
   },
   methods: {
     async login () {
-      console.log(this.email, this.password)
+        this.errorRegistration = validation.login(this.email, this.password);
+
+        const info = {
+            email: this.email,
+            password: this.password
+        }
+
+        if (!this.errorRegistration) {
+            const {user, error} = await authenticationService.login(info);
+
+            if (error) {
+                this.errorRegistration = error
+            } else if (user) {
+                this.$router.replace({
+                    name: "Dashboard",
+                    params: {
+                        user
+                    }
+                });
+            }
+        }
+
     }
   }
 }
@@ -98,4 +126,9 @@ button:hover {
     margin-top: 4rem;
 }
 
+.error {
+  background-color: #d16565;
+  color: white;
+  padding: 10px;
+}
 </style>

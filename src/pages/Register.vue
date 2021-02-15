@@ -94,7 +94,8 @@
 </template>
 
 <script>
-import firebase from "firebase";
+import validation from "@/utils/Validation";
+import authenticationService from '@/services/AuthenticationService';
 
 export default {
   data() {
@@ -106,43 +107,23 @@ export default {
       address: "",
       phoneNumber: "",
       institution: "",
-      errorRegistration: "",
+      errorRegistration: null,
       showNextForm: false
     };
   },
   methods: {
     continueRegister: function() {
-      this.errorRegistration = null;
+      this.errorRegistration = validation.continueRegister(this.email, this.password, this.confirmPassword);
 
-      if (this.email == null || this.email == "") {
-        this.errorRegistration = "Please enter an email address";
-        return;
-      } else if (this.password == null || this.password == "") {
-        this.errorRegistration = "Please enter a password";
-        return;
-      } else if (this.password !== this.confirmPassword) {
-        this.errorRegistration = "Passwords do not match!";
-        return;
+      if (!this.errorRegistration) {
+          this.showNextForm = true;
       }
-
-      this.showNextForm = true;
     },
     goBack: function() {
       this.showNextForm = false;
     },
     finishRegister: async function() {
-      this.errorRegistration = null;
-
-      if (this.name == null || this.name == "") {
-        this.errorRegistration = "Please enter a name";
-        return;
-      } else if (this.address == null || this.address == "") {
-        this.errorRegistration = "Please enter an address";
-        return;
-      } else if (this.institution == null || this.institution == "") {
-        this.errorRegistration = "Please enter an institution affiliation";
-        return;
-      }
+      this.errorRegistration = validation.finishRegister(this.name, this.address, this.institution);
 
       const info = {
         email: this.email,
@@ -154,40 +135,18 @@ export default {
       };
 
       if (!this.errorRegistration) {
-        firebase
-          .auth()
-          .createUserWithEmailAndPassword(info.email, info.password)
-          .then(
-            async userCredentials => {
-              var user = userCredentials.user;
-
-              await user.updateProfile({
-                name: info.name,
-                address: info.address,
-                phoneNumber: info.phoneNumber,
-                institution: info.institution
-              });
-
-              var domain =
-                "https://" + firebase.remoteConfig().app.options.authDomain;
-
-              var actionCodeSettings = {
-                url: domain + "/login"
-              };
-
-              await user.sendEmailVerification(actionCodeSettings);
-
-              this.$router.replace({
+        const {user, error} = await authenticationService.register(info);
+    
+        if (error) {
+            this.errorRegistration = error
+        } else if (user) {
+            this.$router.replace({
                 name: "RegisterConfirmation",
                 params: {
-                  user
+                    user
                 }
-              });
-            },
-            error => {
-              this.errorRegistration = error.message;
-            }
-          );
+            });
+        }
       }
     }
   }
