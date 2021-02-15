@@ -2,16 +2,22 @@
   <div class="navbar-wrapper">
     <h1 class="title">Cardiomyopathy Platform</h1>
     <div class="navbar-links">
-      <div @click="updatePath('/')" class="navbar-link">
-        <router-link to="/" class="link">Home</router-link>
+      <div class="navbar-link">
+        <router-link to="/" class="link" @click="updatePath('/')"
+          >Home</router-link
+        >
         <div class="active" v-if="path === '/'" />
       </div>
-      <div @click="updatePath('/login')" class="navbar-link">
-        <router-link to="login" class="link">Login</router-link>
+      <div class="navbar-link">
+        <router-link to="login" class="link" @click="updatePath('/login')"
+          >Login</router-link
+        >
         <div class="active" v-if="path === '/login'" />
       </div>
-      <div @click="updatePath('/register')" class="navbar-link">
-        <router-link to="register" class="link">Register</router-link>
+      <div class="navbar-link">
+        <router-link to="register" class="link" @click="updatePath('/register')"
+          >Register</router-link
+        >
         <div
           class="active"
           v-if="path === '/register' || path === '/register-confirmation'"
