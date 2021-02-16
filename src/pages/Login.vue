@@ -1,8 +1,8 @@
 <template>
     <div class="login-page">
        <div class="sign-in-wrapper">
-           <div v-if="errorRegistration" class="error">
-                {{ errorRegistration }}
+           <div v-if="errorLogin" class="error">
+                {{ errorLogin }}
             </div>
             <h1 class="title">Sign in</h1>
             <input
@@ -37,23 +37,23 @@ export default {
     return {
       email: "",
       password: "",
-      errorRegistration: ""
+      errorLogin: ""
     }
   },
   methods: {
     async login () {
-        this.errorRegistration = validation.login(this.email, this.password);
+        this.errorLogin = validation.login(this.email, this.password);
 
         const info = {
             email: this.email,
             password: this.password
         }
 
-        if (!this.errorRegistration) {
+        if (!this.errorLogin) {
             const {user, error} = await authenticationService.login(info);
 
             if (error) {
-                this.errorRegistration = error
+                this.errorLogin = error
             } else if (user) {
                 this.$router.replace({
                     name: "Dashboard",
