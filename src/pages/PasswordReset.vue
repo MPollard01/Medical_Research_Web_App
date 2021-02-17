@@ -37,6 +37,7 @@
 
 <script>
 import firebase from "firebase";
+import validation from "@/utils/Validation";
 
 export default {
   data() {
@@ -48,11 +49,7 @@ export default {
   },
   methods: {
     requestPasswordReset: async function() {
-      this.errorPasswordReset = null;
-      if (this.email == null || this.email == "") {
-        this.errorPasswordReset = "Please enter an email address";
-        return;
-      }
+      this.errorPasswordReset = validation.passwordReset(this.email);
 
       if (!this.errorPasswordReset) {
         var domain =

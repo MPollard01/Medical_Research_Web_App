@@ -3,31 +3,30 @@
     <h1 class="title">Cardiomyopathy Platform</h1>
     <div class="navbar-links">
       <div class="navbar-link">
-        <router-link to="/" class="link" @click="updatePath('/')"
-          >Home</router-link
-        >
+        <router-link to="/" class="link"><span @click="updatePath('/')">Home</span></router-link>
         <div class="active" v-if="path === '/'" />
       </div>
       <div class="navbar-link">
-        <router-link to="login" class="link" @click="updatePath('/login')"
-          >Login</router-link
-        >
+        <router-link to="login" class="link"><span @click="updatePath('/login')">Login</span></router-link>
         <div class="active" v-if="path === '/login'" />
       </div>
       <div class="navbar-link">
-        <router-link to="register" class="link" @click="updatePath('/register')"
-          >Register</router-link
-        >
+        <router-link to="register" class="link"><span @click="updatePath('/register')">Register</span></router-link>
         <div
           class="active"
           v-if="path === '/register' || path === '/register-confirmation'"
         />
+      </div>
+      <div class="navbar-link">
+        <router-link to="login" class="link"><span @click="logout">Logout</span></router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import authenticationService from '@/services/AuthenticationService';
+
 export default {
   data() {
     return {
@@ -37,6 +36,9 @@ export default {
   methods: {
     updatePath(path) {
       this.path = path;
+    },
+    logout () {
+        authenticationService.logout();
     }
   },
   mounted() {
