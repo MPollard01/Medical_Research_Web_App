@@ -22,22 +22,9 @@
     <el-menu-item v-if="loggedIn" index="dashboard">Dashboard</el-menu-item>
     <el-submenu v-if="loggedIn" index="3">
       <template #title>Data</template>
-      <el-menu-item index="add">Add</el-menu-item>
-      <el-menu-item index="query">Query</el-menu-item>
+      <el-menu-item index="add-data">Add</el-menu-item>
+      <el-menu-item index="query-data">Query</el-menu-item>
     </el-submenu>
-    <el-submenu v-if="loggedIn" index="4">
-      <template #title>Charts</template>
-      <el-menu-item index="4-1">Line</el-menu-item>
-      <el-menu-item index="4-2">Bar</el-menu-item>
-      <el-menu-item index="4-3">Pie</el-menu-item>
-    </el-submenu>
-    <el-menu-item v-if="loggedIn" id="search-bg">
-      <el-input placeholder="Search" v-model="search" id="search">
-        <template #prefix>
-          <i class="el-input__icon el-icon-search"></i>
-        </template>
-      </el-input>
-    </el-menu-item>
     <el-menu-item v-if="loggedIn" @click="logout">Logout</el-menu-item>
   </el-menu>
 </template>

@@ -1,6 +1,8 @@
 <template>
-  <MainNav />
-  <router-view />
+  <div>
+    <MainNav />
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -47,7 +49,6 @@ body {
 }
 
 .wrapper {
-  width: 600px;
   margin-top: 5%;
 }
 
@@ -65,6 +66,10 @@ body {
 
 p {
   font-size: 18px;
+}
+
+.input-group {
+  display: inline-grid;
 }
 
 .input {
