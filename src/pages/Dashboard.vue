@@ -1,17 +1,25 @@
 <template>
   <div class="dashboard-page">
     <div class="dashboard-wrapper">
-        <h1>Dashboard</h1>
+        <SearchBar />
+        <CommonChart />
     </div>
   </div>
 </template>
 
 <script>
+import CommonChart from '@/components/CommonChart';
+import SearchBar from '@/components/SearchBar';
+
 export default {
   props: {
     user: {
       type: Object
     }
+  },
+  components: {
+    CommonChart,
+    SearchBar
   },
   data () {
     return {}
