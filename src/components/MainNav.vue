@@ -9,14 +9,14 @@
     router
     :default-active="activeIndex"
   >
-    <el-menu-item id="title">
+    <el-menu-item id="title" index="null">
       <span>Cardiomyopathy Platform</span>
     </el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Home">Home</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Login">Login</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Register">Register</el-menu-item>
     <el-menu-item v-if="loggedIn" index="Dashboard">Dashboard</el-menu-item>
-    <el-menu-item v-if="loggedIn" @click="logout">Logout</el-menu-item>
+    <el-menu-item v-if="loggedIn" @click="logout" index="logout">Logout</el-menu-item>
   </el-menu>
 </template>
 
@@ -38,11 +38,6 @@ export default {
       console.log(key, keyPath);
     }
 
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
-      this.loggedIn.value = user;
-    });
-
     function logout() {
       firebase
         .auth()
@@ -58,8 +53,20 @@ export default {
 
     return { activeIndex, loggedIn, user, handleSelect, logout };
   },
+  mounted () {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        this.loggedIn = true;
+      }
+    });
+  },
   watch:{
     $route (to, from){
+      firebase.auth().onAuthStateChanged((user) => {
+        if(user) {
+          this.loggedIn = true;
+        }
+      });
       console.log(to, from);
       this.activeIndex = this.$router.currentRoute._value.name;
     }

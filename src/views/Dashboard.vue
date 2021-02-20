@@ -1,15 +1,17 @@
 <template>
   <div class="page">
     <div class="wrapper">
-      <h1 class="title">Dashboard</h1>
       <ProfileCard />
-      <SearchBar @handleSearch="onSeachChild"/>
-      <div v-if="data" class="content">
-        <InfoCard v-if="data && data.apiData" :terms="data.apiData.terms" :name="data.name"/>
-        <CommonChart />
-      </div>
-      <div v-if="!data " class="empty">
-        <Empty />
+      <div class="dashboard">
+        <h1 class="title">Dashboard</h1>
+        <SearchBar @handleSearch="onSeachChild"/>
+        <div v-if="data" class="content">
+          <InfoCard v-if="data && data.apiData" :terms="data.apiData.terms" :name="data.name"/>
+          <CommonChart v-if="data && data.datastoreData" :graphs="data.datastoreData.graphs"/>
+        </div>
+        <div v-if="!data " class="empty">
+          <Empty />
+        </div>
       </div>
     </div>
   </div>
@@ -57,4 +59,13 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+  .wrapper {
+    display: flex;
+    width: 100%;
+  }
+
+  .dashboard {
+    width: 800px
+  }
+</style>

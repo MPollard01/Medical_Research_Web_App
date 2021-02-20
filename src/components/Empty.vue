@@ -1,7 +1,9 @@
 <template>
   <div class="empty-wrapper">
-      <i class="el-icon-search"></i>
-      <p>Please search for a gene to begin.</p>
+      <el-card shadow="hover" class="box-card">
+        <i class="el-icon-search"></i>
+        <p>Please search for a gene to begin.</p>
+      </el-card>
   </div>
 </template>
 
@@ -19,7 +21,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .empty-wrapper {
-    margin-top: 6rem;
+    margin-top: 1rem;
 }
 .el-icon-search {
     font-size: 50px;

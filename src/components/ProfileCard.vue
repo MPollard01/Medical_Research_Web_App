@@ -33,8 +33,6 @@ export default {
 <style scoped>
 .box-card {
     width: 300px;
-    position: absolute;
-    top: 60px;
     left: 1rem;
     padding: 1rem;
 }

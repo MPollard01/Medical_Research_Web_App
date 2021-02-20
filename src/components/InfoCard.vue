@@ -7,10 +7,15 @@
             </div>
         </template>
         <div class="content">
-            <div v-for="(term, x) in terms" :key="x">
-                <h3>{{term["name"]}}</h3>
-                <p>{{term["definition"]}}</p>
-            </div>
+            <h4>Clinical synopsis</h4>
+            <el-collapse v-model="activeNames" @change="handleChange" v-for="(term, x) in terms" :key="x">
+                <el-collapse-item name="1" >
+                    <template v-slot:title>
+                        {{term["name"]}}
+                    </template>
+                    <div>{{term["definition"] ? term["definition"] : "No Definition"}}</div>
+                </el-collapse-item>
+            </el-collapse>
         </div>
     </el-card>
   </div>
@@ -37,7 +42,10 @@ export default {
 <style scoped>
 .wrapper {
   margin-top: 1rem;
-  
+}
+
+.box-card {
+    width: 100%;
 }
 
 .content {
