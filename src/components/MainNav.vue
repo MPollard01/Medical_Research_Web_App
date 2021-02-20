@@ -8,7 +8,7 @@
     active-text-color="#c28adb"
     router
   >
-    <el-menu-item id="title">
+    <el-menu-item index="home" id="title">
       <span>Cardiomyopathy Platform</span>
       <img
         id="heart-icon"
@@ -16,16 +16,16 @@
         alt="Heart Icon"
       />
     </el-menu-item>
-    <el-menu-item v-if="!loggedIn" index="home">Home</el-menu-item>
-    <el-menu-item v-if="!loggedIn" index="login">Login</el-menu-item>
-    <el-menu-item v-if="!loggedIn" index="register">Register</el-menu-item>
-    <el-menu-item v-if="loggedIn" index="dashboard">Dashboard</el-menu-item>
-    <el-submenu v-if="loggedIn" index="3">
+
+    <el-menu-item index="dashboard">Dashboard</el-menu-item>
+    <el-submenu index="3">
       <template #title>Data</template>
       <el-menu-item index="add-data">Add</el-menu-item>
       <el-menu-item index="query-data">Query</el-menu-item>
     </el-submenu>
-    <el-menu-item v-if="loggedIn" @click="logout">Logout</el-menu-item>
+    <el-menu-item v-if="!loggedIn" index="login">Login</el-menu-item>
+    <el-menu-item v-if="!loggedIn" index="register">Register</el-menu-item>
+    <el-menu-item @click="logout">Logout</el-menu-item>
   </el-menu>
 </template>
 
@@ -60,7 +60,7 @@ export default {
           firebase.auth().onAuthStateChanged(() => {
             user.value = null;
             loggedIn.value = false;
-            router.push("/login");
+            router.push("/");
           });
         });
     }
