@@ -69,6 +69,10 @@ p {
   font-size: 18px;
 }
 
+.input-group {
+  display: inline-grid;
+}
+
 .input {
   width: 300px;
   padding: 0.75rem 1rem;

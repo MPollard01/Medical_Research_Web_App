@@ -12,20 +12,22 @@
         {{ errorLogin }}
       </div>
       <h1 class="title">Sign in</h1>
-      <input
-        type="email"
-        name="email"
-        v-model="email"
-        placeholder="Email"
-        class="input email-input"
-      />
-      <input
-        type="password"
-        name="password"
-        v-model="password"
-        placeholder="Password"
-        class="input password-input"
-      />
+      <div class="input-group">
+        <input
+          type="email"
+          name="email"
+          v-model="email"
+          placeholder="Email"
+          class="input email-input"
+        />
+        <input
+          type="password"
+          name="password"
+          v-model="password"
+          placeholder="Password"
+          class="input password-input"
+        />
+      </div>
       <br />
       <button class="button" @click="login">Sign in</button>
       <br />
