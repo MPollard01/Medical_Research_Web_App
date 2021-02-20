@@ -1,69 +1,74 @@
 <template>
-  <div class="searchbar-wrapper">
-    <div class="vld-parent">
-        <loading :active.sync="isLoading" 
-        :can-cancel="true" 
-        :on-cancel="onCancel"
-        :is-full-page="fullPage"
-        color="#c28adb"></loading>
+  <div>
+    <div v-if="loading" id="loading">
+        <img
+          id="loading-image"
+          src="../assets/ajax-loader.gif"
+          alt="Loading..."
+        />
     </div>
-    <autocomplete
-        :search="search"
-        placeholder="Search for Cardiomyopathy data"
-        aria-label="Search for Cardiomyopathy data"
-        @submit="handleSubmit"
-        class="searchbar"
-    ></autocomplete>
+    <el-autocomplete
+      class="inline-input"
+      v-model="query"
+      :fetch-suggestions="querySearch"
+      placeholder="Search gene"
+      :trigger-on-focus="false"
+      @select="handleSelect"
+    ></el-autocomplete>
+    <router-link to="/add-data" class="button">Add Data</router-link>
   </div>
 </template>
 
 <script>
-import Autocomplete from '@trevoreyre/autocomplete-vue'
-import Loading from 'vue-loading-overlay';
-// import datastoreService from '@/services/DatastoreService';
+import datastoreService from '@/services/DatastoreService';
 import apiService from '@/services/APIService';
-import 'vue-loading-overlay/dist/vue-loading.css';
-import '@trevoreyre/autocomplete-vue/dist/style.css';
-
 
 export default {
   data() {
       return {
-        query: "",
-        searchArray: apiService.searchArray,
-        isLoading: false,
-        fullPage: true
+        links: [],
+        query: '',
+        loading: false
       }
   },
   methods: {
-    search(input) {
-      if (input.length < 1) { return [] }
-      return this.searchArray.filter(item => {
-        return item.toLowerCase()
-          .startsWith(input.toLowerCase())
-      })
+    querySearch(queryString, cb) {
+      const links = this.links;
+      const results = queryString ? links.filter(this.createFilter(queryString)) : links;
+      // call callback function to return suggestions
+      cb(results);
     },
-    handleSubmit() {
-        this.isLoading = true;
-        // simulate AJAX
-        setTimeout(() => {
-            this.isLoading = false
-        },2000)
+    createFilter(queryString) {
+      return (link) => {
+        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+      };
+    },
+    loadAll() {
+      return apiService.apiLinks;
+    },
+    async handleSelect(item) {
+      this.loading = true;
+      const apiData = await apiService.getApiData(item.link);
+      const datastoreData = await datastoreService.getDatastoreData(item.value);
+
+      if (apiData || datastoreData) {
+        this.loading = false;
+      }
+
+      this.$emit('handleSearch', {
+        apiData,
+        datastoreData,
+        name: item.value
+      })
+
     }
   },
-  components: {
-      Autocomplete,
-      Loading
-  },
   mounted () {
-    console.log(this.query);
+    this.links = this.loadAll();
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.searchbar-wrapper {
-    text-align: left;
-}
 </style>

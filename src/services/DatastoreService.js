@@ -13,11 +13,10 @@ const collectionMap = {
     }
 }
 
-const searchByTerm = (term) => {
-
+const getDatastoreData = async (term) => {
+    console.log(collectionMap[term]);
 }
 
 export default {
-    searchByTerm,
-    collectionMap
+    getDatastoreData
 }
