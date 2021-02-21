@@ -7,25 +7,16 @@
     text-color="#fff"
     active-text-color="#c28adb"
     router
+    :default-active="activeIndex"
   >
-    <el-menu-item id="title">
+    <el-menu-item id="title" index="null">
       <span>Cardiomyopathy Platform</span>
-      <img
-        id="heart-icon"
-        src="../assets/Realistic-Red-Heart.svg"
-        alt="Heart Icon"
-      />
     </el-menu-item>
-    <el-menu-item v-if="!loggedIn" index="home">Home</el-menu-item>
-    <el-menu-item v-if="!loggedIn" index="login">Login</el-menu-item>
-    <el-menu-item v-if="!loggedIn" index="register">Register</el-menu-item>
-    <el-menu-item v-if="loggedIn" index="dashboard">Dashboard</el-menu-item>
-    <el-submenu v-if="loggedIn" index="3">
-      <template #title>Data</template>
-      <el-menu-item index="add-data">Add</el-menu-item>
-      <el-menu-item index="query-data">Query</el-menu-item>
-    </el-submenu>
-    <el-menu-item v-if="loggedIn" @click="logout">Logout</el-menu-item>
+    <el-menu-item v-if="!loggedIn" index="Home">Home</el-menu-item>
+    <el-menu-item v-if="!loggedIn" index="Login">Login</el-menu-item>
+    <el-menu-item v-if="!loggedIn" index="Register">Register</el-menu-item>
+    <el-menu-item v-if="loggedIn" index="Dashboard">Dashboard</el-menu-item>
+    <el-menu-item v-if="loggedIn" @click="logout" index="logout">Logout</el-menu-item>
   </el-menu>
 </template>
 
@@ -37,16 +28,11 @@ import firebase from "firebase";
 export default {
   name: "MainNav",
   setup() {
-    const activeIndex = ref("home");
+    const activeIndex = ref(null);
     const loggedIn = ref(false);
     const user = ref(null);
 
     const router = useRouter();
-
-    firebase.auth().onAuthStateChanged((user) => {
-      console.log(user);
-      loggedIn.value = user;
-    });
 
     function handleSelect(key, keyPath) {
       console.log(key, keyPath);
@@ -67,6 +53,24 @@ export default {
 
     return { activeIndex, loggedIn, user, handleSelect, logout };
   },
+  mounted () {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        this.loggedIn = true;
+      }
+    });
+  },
+  watch:{
+    $route (to, from){
+      firebase.auth().onAuthStateChanged((user) => {
+        if(user) {
+          this.loggedIn = true;
+        }
+      });
+      console.log(to, from);
+      this.activeIndex = this.$router.currentRoute._value.name;
+    }
+  } 
 };
 </script>
 
@@ -74,18 +78,15 @@ export default {
 .el-submenu__title i {
   color: #fff !important;
 }
+
 #title {
   font-size: medium;
-  margin-right: 3em;
+  margin-right: calc(100vw - 30rem);
 }
 #title:hover {
   background: none !important;
 }
-#heart-icon {
-  width: 25px;
-  height: 25px;
-  padding: 0 20px;
-}
+
 #search-bg {
   background: none !important;
 }

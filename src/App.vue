@@ -49,7 +49,8 @@ body {
 }
 
 .wrapper {
-  margin-top: 5%;
+  width: 600px;
+  margin-top: 3rem;
 }
 
 .container {
