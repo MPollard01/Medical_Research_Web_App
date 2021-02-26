@@ -46,7 +46,7 @@ export default {
           firebase.auth().onAuthStateChanged(() => {
             user.value = null;
             loggedIn.value = false;
-            router.push("/login");
+            router.push("/");
           });
         });
     }
