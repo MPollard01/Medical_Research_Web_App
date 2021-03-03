@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :span="24">
         <div class="head">
-          <h2 class="title">Add Data To Our Database</h2>
+          <h2 class="title">Delete Your Data</h2>
         </div>
       </el-col>
     </el-row>
@@ -13,12 +13,12 @@
           <el-card shadow="hover" class="box-card">
             <template #header>
               <div class="card-header">
-                <span class="card-title">Cardiomyopathy Details</span>
+                <span class="card-title">Find your data</span>
               </div>
             </template>
             <div>
               <el-form ref="form" label-width="180px">
-                <el-form-item label="Cardiomyopathy Type" required>
+                <el-form-item label="Cardiomyopathy Type">
                   <el-select
                     v-model="cardioType"
                     filterable
@@ -35,8 +35,11 @@
                     >
                     </el-option>
                   </el-select>
+                  <el-button type="primary" @click="findDataByCardio"
+                    >Find</el-button
+                  >
                 </el-form-item>
-                <el-form-item label="Gene Name" required>
+                <el-form-item label="Gene Name">
                   <el-select
                     v-model="geneName"
                     filterable
@@ -53,8 +56,11 @@
                     >
                     </el-option>
                   </el-select>
+                  <el-button type="primary" @click="findDataByGene"
+                    >Find</el-button
+                  >
                 </el-form-item>
-                <el-form-item label="Study Title" required>
+                <el-form-item label="Study Title">
                   <el-select
                     v-model="title"
                     filterable
@@ -71,53 +77,25 @@
                     >
                     </el-option>
                   </el-select>
-                </el-form-item>
-                <el-form-item label="Additional Notes (optional)">
-                  <el-input type="textarea" rows="7" v-model="notes"></el-input>
-                </el-form-item>
-                <el-form-item>
-                  <el-button type="primary" @click="addData">Upload</el-button>
+                  <el-button type="primary" @click="findDataByTitle"
+                    >Find</el-button
+                  >
                 </el-form-item>
               </el-form>
             </div>
           </el-card>
-        </div>
-      </el-col>
-      <el-col :span="6">
-        <div>
           <el-card shadow="hover" class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span class="card-title">Upload File</span>
-              </div>
-            </template>
-            <div>
-              <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                multiple
-                :limit="3"
-                :on-exceed="handleExceed"
-                :file-list="fileList"
-                accept=".csv"
-              >
-                <p>
-                  The CSV data will be used to plot graphical charts that will
-                  be displayed when this data is searched.
-                </p>
-                <el-button size="small" type="success"
-                  >Click to upload</el-button
-                >
-                <template #tip>
-                  <div class="el-upload__tip">
-                    Upload CSV file
-                  </div>
-                </template>
-              </el-upload>
-            </div>
+            <h2>Results</h2>
+            <DataResult
+              class="result"
+              v-for="data in results"
+              :key="data.id"
+              :data="data"
+              @delete-data="deleteData"
+            />
+            <p v-if="!results.length">
+              No results found, please refine your search.
+            </p>
           </el-card>
         </div>
       </el-col>
@@ -128,39 +106,100 @@
 <script>
 import { ref } from "vue";
 import firebase from "firebase";
-import { firebaseFireStore, timestamp } from "@/firebase/database";
+import { firebaseFireStore } from "@/firebase/database";
+import moment from "moment";
+
+import DataResult from "@/components/DataResult";
 
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
 import studyTitles from "@/assets/studyTitles";
 
 export default {
-  name: "AddData",
+  name: "DeleteData",
+  components: {
+    DataResult,
+  },
   setup() {
     const user = ref(null);
     const cardioType = ref("");
     const geneName = ref("");
     const title = ref("");
-    const notes = ref("");
-    const fileList = ref([]);
+    const results = ref([]);
 
-    function handlePreview(file) {
-      console.log(file);
+    function findDataByCardio() {
+      findData("cardioType", cardioType.value);
     }
 
-    function addData() {
-      const data = {
-        cardioType: cardioType.value,
-        geneName: geneName.value,
-        title: title.value,
-        notes: notes.value,
-        createdAt: timestamp(),
-      };
+    function findDataByGene() {
+      findData("geneName", geneName.value);
+    }
+
+    function findDataByTitle() {
+      findData("title", title.value);
+    }
+
+    function findData(whereColumn, query) {
       firebaseFireStore
         .collection("users")
         .doc(user.value.uid)
         .collection("cardioData")
-        .add(data);
+        .where(whereColumn, "==", query)
+        .onSnapshot((snapShot) => {
+          results.value = [];
+          snapShot.forEach((doc) => {
+            console.log(doc.id + ": ");
+            console.log(doc.data());
+            var data = doc.data();
+            data.id = doc.id;
+            data.createdAt = data.createdAt.toDate();
+            results.value.push(data);
+          });
+        });
+    }
+
+    function deleteData(documentId) {
+      firebaseFireStore
+        .collection("users")
+        .doc(user.value.uid)
+        .collection("cardioData")
+        .get()
+        .then((snapShot) => {
+          snapShot.forEach((doc) => {
+            if (doc.id === documentId) {
+              if (
+                confirm(
+                  "Are you sure you want to delete record with the id: " +
+                    doc.id +
+                    " ?"
+                )
+              ) {
+                console.log("Deleting...");
+                doc.ref
+                  .delete()
+                  .then(() => {
+                    const timestamp = moment().format("h:mma, Do MMMM YYYY");
+                    const message =
+                      "Record: " +
+                      doc.id +
+                      " was successfully deleted at " +
+                      timestamp +
+                      "!";
+                    console.log(message);
+                    alert(message);
+                  })
+                  .catch((error) => {
+                    console.error("Error removing document: ", error);
+                    alert(
+                      "An error occured deleting this record, please try again."
+                    );
+                  });
+              } else {
+                console.log("User cancelled deletion.");
+              }
+            }
+          });
+        });
     }
 
     return {
@@ -171,10 +210,12 @@ export default {
       cardioType,
       geneName,
       title,
-      notes,
-      addData,
-      fileList,
-      handlePreview,
+      results,
+      findDataByCardio,
+      findDataByGene,
+      findDataByTitle,
+      findData,
+      deleteData,
     };
   },
   mounted() {
@@ -191,7 +232,9 @@ export default {
 
 <style scoped>
 .wrapper {
+  width: 100%;
   margin: 20px 100px;
+  margin-bottom: 100px;
 }
 .title {
   text-align: left;
@@ -224,6 +267,9 @@ p {
   text-align: left;
 }
 .el-select {
-  width: 100%;
+  width: 50%;
+}
+.result {
+  margin: 10px;
 }
 </style>

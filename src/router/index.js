@@ -7,7 +7,8 @@ import Register from "@/views/Register";
 import RegisterConfirmation from "@/views/RegisterConfirmation";
 import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
-import AddData from "@/views/AddData.vue";
+import AddData from "@/views/AddData";
+import DeleteData from "@/views/DeleteData";
 
 const routes = [
   {
@@ -48,6 +49,14 @@ const routes = [
     path: "/add-data",
     name: "AddData",
     component: AddData,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/delete-data",
+    name: "DeleteData",
+    component: DeleteData,
     meta: {
       requiresAuth: true,
     },
