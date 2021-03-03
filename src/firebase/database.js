@@ -2,15 +2,14 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
-// firebaseconfig here
 const firebaseConfig = {
-  apiKey: "AIzaSyAJNp8NG1nZfK1dq18WzwEIF0sfgvGL4mw",
-  authDomain: "cardiomyapothy-blog.firebaseapp.com",
-  projectId: "cardiomyapothy-blog",
-  storageBucket: "cardiomyapothy-blog.appspot.com",
-  messagingSenderId: "292478695937",
-  appId: "1:292478695937:web:0e7a302e9e326b8cbb9e00",
-  measurementId: "G-2KX5W83KF1",
+  apiKey: "AIzaSyA72RdB4Bmx2iCoaxAWQhx2EzAgF9PnKfM",
+  authDomain: "cardiomyopathy-platform-66011.firebaseapp.com",
+  projectId: "cardiomyopathy-platform-66011",
+  storageBucket: "cardiomyopathy-platform-66011.appspot.com",
+  messagingSenderId: "398481339102",
+  appId: "1:398481339102:web:e1ff3c020923a6ec3f084f",
+  measurementId: "G-Z2SJ66MMJG"
 };
 
 // Initialize Firebase
