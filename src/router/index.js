@@ -19,11 +19,17 @@ const routes = [
     path: "/login",
     name: "Login",
     component: Login,
+    meta: {
+      loggedOut: true,
+    },
   },
   {
     path: "/register",
     name: "Register",
     component: Register,
+    meta: {
+      loggedOut: true,
+    },
   },
   {
     path: "/register-confirmation",
@@ -66,10 +72,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = firebase.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
+  const loggedOut = to.matched.some((record) => record.meta.loggedOut);
 
   if (requiresAuth && !isAuthenticated) {
     next("/login");
-  } else if (!requiresAuth && isAuthenticated) {
+  } else if (loggedOut && isAuthenticated) {
     next("/dashboard");
   } else {
     next();

@@ -10,7 +10,8 @@ const register = async (info) => {
       info.email,
       info.password
     );
-    const user = response.user;
+    user = response.user;
+
     await user.updateProfile({
       name: info.name,
       address: info.address,
