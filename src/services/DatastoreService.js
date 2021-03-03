@@ -22,7 +22,7 @@ const getCollections = (term) => {
 const getData = async (collection) => {
     const snapshot = await firebaseFireStore.collection(collection).get()
     const graphData = snapshot.docs.map(doc => doc.data());
-
+    
     return graphData;
 
 }

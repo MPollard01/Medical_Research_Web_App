@@ -1,9 +1,6 @@
 <template>
   <div class="empty-wrapper">
-      <el-card shadow="hover" class="box-card">
-        <i class="el-icon-search"></i>
-        <p>Please search for a gene to begin.</p>
-      </el-card>
+      <el-empty description="The dashboard is currently empty."></el-empty>
   </div>
 </template>
 

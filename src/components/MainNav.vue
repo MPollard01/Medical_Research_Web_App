@@ -9,15 +9,47 @@
     router
     :default-active="activeIndex"
   >
-    <el-menu-item id="title" index="null">
+    <el-menu-item id="title" index="/">
       <span>Cardiomyopathy Platform</span>
     </el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Home">Home</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Login">Login</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Register">Register</el-menu-item>
-    <el-menu-item v-if="loggedIn" index="Dashboard">Dashboard</el-menu-item>
-    <el-menu-item v-if="loggedIn" @click="logout" index="logout">Logout</el-menu-item>
+    <el-submenu v-if="loggedIn">
+      <template v-if="user" #title>{{user.email}}</template>
+      <el-menu-item @click="logout" index="logout">Logout</el-menu-item>
+    </el-submenu>
   </el-menu>
+
+  <el-menu 
+    v-if="loggedIn"
+    background-color="#727eaf"
+    active-text-color="#c28adb"
+    text-color="#fff" 
+    :default-active="activeIndex2" 
+    class="el-menu-vertical-demo"
+    :collapse="isCollapsed"
+    router
+    >
+  <el-menu-item index="Dashboard">
+    <i class="el-icon-s-home el-icon"></i>
+    <template #title>Dashboard</template>
+  </el-menu-item>
+  <el-menu-item index="Search">
+    <i class="el-icon-search el-icon"></i>
+    <template #title>Search</template>
+  </el-menu-item>
+  
+  <el-menu-item index="add-data">
+    <i class="el-icon-plus el-icon"></i>
+    <template #title>Add data</template>
+  </el-menu-item>
+ 
+  <el-menu-item index="Delete">
+    <i class="el-icon-delete el-icon"></i>
+    <template #title>Delete data</template>
+  </el-menu-item>
+</el-menu>
 </template>
 
 <script>
@@ -28,9 +60,11 @@ import firebase from "firebase";
 export default {
   name: "MainNav",
   setup() {
-    const activeIndex = ref(null);
+    const activeIndex = ref("");
+    const activeIndex2 = ref("")
     const loggedIn = ref(false);
     const user = ref(null);
+    const isCollapsed = ref(true)
 
     const router = useRouter();
 
@@ -46,17 +80,18 @@ export default {
           firebase.auth().onAuthStateChanged(() => {
             user.value = null;
             loggedIn.value = false;
-            router.push("/");
+            router.push("/login");
           });
         });
     }
 
-    return { activeIndex, loggedIn, user, handleSelect, logout };
+    return { activeIndex, loggedIn, user, handleSelect, logout, isCollapsed, activeIndex2 };
   },
   mounted () {
     firebase.auth().onAuthStateChanged((user) => {
       if(user) {
         this.loggedIn = true;
+        
       }
     });
   },
@@ -65,6 +100,7 @@ export default {
       firebase.auth().onAuthStateChanged((user) => {
         if(user) {
           this.loggedIn = true;
+          this.user = user
         }
       });
       console.log(to, from);
@@ -94,4 +130,23 @@ export default {
   border-radius: 15px;
   height: 30px;
 }
+
+.el-menu-vertical-demo {
+    position: fixed;
+    height: 100%;
+    border: none;
+    top: 60px;
+    z-index: 1;
+  }
+
+  .el-icon {
+    color: #fff;
+  }
+
+  .el-menu-demo {
+    position: fixed;
+    width: 100%;
+    z-index: 1;
+    
+  }
 </style>

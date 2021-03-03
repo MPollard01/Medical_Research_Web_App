@@ -13,9 +13,11 @@
       :fetch-suggestions="querySearch"
       placeholder="Search gene"
       :trigger-on-focus="false"
-      @select="handleSelect"
-    ></el-autocomplete>
-    <router-link to="/add-data" class="button">Add Data</router-link>
+     @select="handleSelect"
+    >
+    
+    </el-autocomplete>
+    
   </div>
 </template>
 
@@ -47,6 +49,7 @@ export default {
       return apiService.apiLinks;
     },
     async handleSelect(item) {
+      console.log(item.link)
       this.loading = true;
       const apiData = await apiService.getApiData(item.link);
       const datastoreData = datastoreService.getCollections(item.value);
@@ -71,4 +74,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+ 
 </style>

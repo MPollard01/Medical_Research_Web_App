@@ -3,15 +3,14 @@ import { firebaseAuthentication } from "@/firebase/database";
 
 const register = async (info) => {
   let user;
-  let error;
+  let errors;
 
   try {
     const response = await firebaseAuthentication.createUserWithEmailAndPassword(
       info.email,
       info.password
     );
-    user = response.user;
-
+    const user = response.user;
     await user.updateProfile({
       name: info.name,
       address: info.address,
@@ -27,18 +26,18 @@ const register = async (info) => {
 
     await user.sendEmailVerification(actionCodeSettings);
   } catch (err) {
-    error = err.message;
+    errors = err.message;
   }
 
   return {
     user,
-    error,
+    errors,
   };
 };
 
 const login = async (info) => {
   let user;
-  let error;
+  let errors;
 
   try {
     const response = await firebaseAuthentication.signInWithEmailAndPassword(
@@ -47,12 +46,12 @@ const login = async (info) => {
     );
     user = response.user;
   } catch (err) {
-    error = err.message;
+    errors = err.message;
   }
 
   return {
     user,
-    error,
+    errors,
   };
 };
 
