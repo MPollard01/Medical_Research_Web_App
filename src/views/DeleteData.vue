@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrap">
     <el-row :gutter="20">
       <el-col :span="24">
         <div class="head">
