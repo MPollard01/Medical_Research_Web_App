@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrap">
     <el-row :gutter="20">
       <el-col :span="24">
         <div class="head">
@@ -10,21 +10,21 @@
     <el-row :gutter="20">
       <el-col :span="18">
         <div>
-          <el-card shadow="hover" class="box-card">
+          <el-card shadow="always" class="box-card">
             <template #header>
               <div class="card-header">
                 <span class="card-title">Cardiomyopathy Details</span>
               </div>
             </template>
             <div>
-              <el-form ref="form" label-width="180px">
-                <el-form-item label="Cardiomyopathy Type" required>
+              <el-form status-icon label-width="180px">
+                <el-form-item label="Phenotype">
                   <el-select
-                    v-model="cardioType"
+                    v-model="cardioType.value"
+                    :ref="cardioType.ref"
                     filterable
                     clearable
                     allow-create
-                    default-first-option
                     placeholder="select or type own"
                   >
                     <el-option
@@ -35,14 +35,17 @@
                     >
                     </el-option>
                   </el-select>
+                  <span class="error" v-if="cardioType.error">{{
+                    cardioType.error.message
+                  }}</span>
                 </el-form-item>
-                <el-form-item label="Gene Name" required>
+                <el-form-item label="Gene Name">
                   <el-select
-                    v-model="geneName"
+                    v-model="geneName.value"
+                    :ref="geneName.ref"
                     filterable
                     clearable
                     allow-create
-                    default-first-option
                     placeholder="select or type name"
                   >
                     <el-option
@@ -53,14 +56,17 @@
                     >
                     </el-option>
                   </el-select>
+                  <span class="error" v-if="geneName.error">{{
+                    geneName.error.message
+                  }}</span>
                 </el-form-item>
-                <el-form-item label="Study Title" required>
+                <el-form-item label="Study Title">
                   <el-select
-                    v-model="title"
+                    v-model="title.value"
+                    :ref="title.ref"
                     filterable
                     clearable
                     allow-create
-                    default-first-option
                     placeholder="select or type title"
                   >
                     <el-option
@@ -71,12 +77,24 @@
                     >
                     </el-option>
                   </el-select>
+                  <span class="error" v-if="title.error">{{
+                    title.error.message
+                  }}</span>
                 </el-form-item>
                 <el-form-item label="Additional Notes (optional)">
-                  <el-input type="textarea" rows="7" v-model="notes"></el-input>
+                  <el-input
+                    type="textarea"
+                    rows="5"
+                    resize="none"
+                    maxlength="200"
+                    show-word-limit
+                    v-model="notes"
+                  ></el-input>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="addData">Upload</el-button>
+                  <el-button type="primary" class="upload" @click="onSubmit"
+                    >Upload</el-button
+                  >
                 </el-form-item>
               </el-form>
             </div>
@@ -85,7 +103,7 @@
       </el-col>
       <el-col :span="6">
         <div>
-          <el-card shadow="hover" class="box-card">
+          <el-card shadow="always" class="box-card">
             <template #header>
               <div class="card-header">
                 <span class="card-title">Upload File</span>
@@ -94,9 +112,10 @@
             <div>
               <el-upload
                 class="upload-demo"
+                ref="upload"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
                 :on-remove="handleRemove"
+                :on-success="handleSuccess"
                 :before-remove="beforeRemove"
                 multiple
                 :limit="3"
@@ -129,6 +148,9 @@
 import { ref } from "vue";
 import firebase from "firebase";
 import { firebaseFireStore, timestamp } from "@/firebase/database";
+import { useForm } from "vue-hooks-form";
+import { ElMessage, ElMessageBox } from "element-plus";
+import Papa from "papaparse";
 
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
@@ -138,43 +160,100 @@ export default {
   name: "AddData",
   setup() {
     const user = ref(null);
-    const cardioType = ref("");
-    const geneName = ref("");
-    const title = ref("");
     const notes = ref("");
-    const fileList = ref([]);
+    const upload = ref(null);
 
-    function handlePreview(file) {
+    const { useField, handleSubmit } = useForm({
+      defaultValues: {},
+    });
+
+    const cardioType = useField("phenotype", {
+      rule: { required: true },
+    });
+
+    const geneName = useField("gene name", {
+      rule: { required: true },
+    });
+
+    const title = useField("title", {
+      rule: { required: true },
+    });
+
+    let csv = [];
+
+    function handleSuccess(response, file, fileList) {
       console.log(file);
+      console.log(fileList[0]);
+      Papa.parse(file.raw, {
+        header: true,
+        complete: function(results) {
+          console.log(results);
+          csv = results.data;
+          let columnLen = Object.keys(csv[0]).length;
+          if (columnLen > 2) {
+            ElMessageBox.alert("This file exceeds 2 columns", "Removing File", {
+              confirmButtonText: "OK",
+              callback: (action) => {
+                ElMessage.info({
+                  type: "info",
+                  message: `action: ${action} removed ${file.name}`,
+                });
+              },
+            });
+
+            upload.value.clearFiles();
+          }
+        },
+      });
     }
 
-    function addData() {
-      const data = {
-        cardioType: cardioType.value,
-        geneName: geneName.value,
-        title: title.value,
-        notes: notes.value,
-        createdAt: timestamp(),
-      };
-      firebaseFireStore
-        .collection("users")
-        .doc(user.value.uid)
-        .collection("cardioData")
-        .add(data);
-    }
+    const onSubmit = () => {
+      ElMessageBox.confirm("Are you sure you want to send?", "Confirm", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      })
+        .then(() => {
+          ElMessage.success({
+            type: "success",
+            message: "Added data to database",
+          });
+          const formData = {
+            cardioType: cardioType.value,
+            geneName: geneName.value,
+            title: title.value,
+            notes: notes.value,
+            createdAt: timestamp(),
+            data: csv,
+          };
+          firebaseFireStore
+            .collection("users")
+            .doc(user.value.uid)
+            .collection("cardioData")
+            .add(formData);
+
+          csv = [];
+        })
+        .catch(() => {
+          ElMessage.info({
+            type: "info",
+            message: "Upload canceled",
+          });
+        });
+    };
 
     return {
       user,
       cardioTypes,
-      geneNames,
+      geneName,
       studyTitles,
       cardioType,
-      geneName,
+      geneNames,
       title,
       notes,
-      addData,
-      fileList,
-      handlePreview,
+      onSubmit: handleSubmit(onSubmit),
+      handleSuccess,
+      upload,
     };
   },
   mounted() {
@@ -190,15 +269,15 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  margin: 20px 100px;
-}
 .title {
   text-align: left;
   margin-right: 20px;
 }
 .el-row {
   margin-bottom: 20px;
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 .el-col {
   border-radius: 4px;
@@ -211,11 +290,7 @@ export default {
   padding: 10px 0;
   background-color: #f9fafc;
 }
-.head {
-  display: flex;
-  align-items: center;
-  padding: 10px 20px;
-}
+
 .card-header {
   text-align: left;
   font-weight: bold;
@@ -225,5 +300,17 @@ p {
 }
 .el-select {
   width: 100%;
+}
+
+.upload {
+  float: right;
+}
+.error {
+  color: red;
+  padding: 0;
+  margin: 0;
+  opacity: 0.6;
+  font-size: 12px;
+  line-height: 15px;
 }
 </style>

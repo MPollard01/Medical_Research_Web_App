@@ -1,10 +1,10 @@
 <template>
-  <div class="page">
-    <div class="wrapper">
-      <ProfileCard />
-      <div class="dashboard">
-        <h1 class="title">Dashboard</h1>
+    <div class="wrap">
+      <div class="head">
+        <h2 class="title">Dashboard</h2>
         <SearchBar @handleSearch="onSeachChild"/>
+      </div>
+      <el-divider></el-divider>
         <div v-if="data" class="content">
           <InfoCard v-if="data && data.apiData" :terms="data.apiData.terms" :name="data.name"/>
           <CommonChart v-if="data && data.datastoreData" :graphs="data.datastoreData.graphs"/>
@@ -12,9 +12,8 @@
         <div v-if="!data " class="empty">
           <Empty />
         </div>
-      </div>
     </div>
-  </div>
+  
 </template>
 
 <script>
@@ -22,12 +21,12 @@ import { ref } from "vue";
 import firebase from "firebase";
 import CommonChart from '@/components/CommonChart';
 import SearchBar from '@/components/SearchBar';
-import ProfileCard from '@/components/ProfileCard';
 import Empty from '@/components/Empty';
 import InfoCard from '@/components/InfoCard';
 
 export default {
   name: "Dashboard",
+  
   setup() {
     const user = ref(null);
     const data = ref(null)
@@ -42,7 +41,6 @@ export default {
   components: {
     CommonChart,
     SearchBar,
-    ProfileCard,
     Empty,
     InfoCard
   },
@@ -68,4 +66,11 @@ export default {
   .dashboard {
     width: 800px
   }
+
+  .title {
+  text-align: left;
+  margin-right: 8em;
+}
+
+  
 </style>

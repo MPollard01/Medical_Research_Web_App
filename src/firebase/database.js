@@ -2,7 +2,6 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 
-// firebaseconfig here
 const firebaseConfig = {
   apiKey: "AIzaSyA72RdB4Bmx2iCoaxAWQhx2EzAgF9PnKfM",
   authDomain: "cardiomyopathy-platform-66011.firebaseapp.com",
