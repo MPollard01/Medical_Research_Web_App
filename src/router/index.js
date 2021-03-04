@@ -72,24 +72,11 @@ const routes = [
   },
 ];
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = firebase.auth().currentUser;
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const loggedOut = to.matched.some((record) => record.meta.loggedOut);
-
-  if (requiresAuth && !isAuthenticated) {
-    next("/login");
-  } else if (loggedOut && isAuthenticated) {
-    next("/dashboard");
-  } else {
-    next();
-  }
-});
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = firebase.auth().currentUser;
