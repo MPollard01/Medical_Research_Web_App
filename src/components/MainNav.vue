@@ -35,10 +35,6 @@
     <i class="el-icon-s-home el-icon"></i>
     <template #title>Dashboard</template>
   </el-menu-item>
-  <el-menu-item index="Search">
-    <i class="el-icon-search el-icon"></i>
-    <template #title>Search</template>
-  </el-menu-item>
   
   <el-menu-item index="add-data">
     <i class="el-icon-plus el-icon"></i>

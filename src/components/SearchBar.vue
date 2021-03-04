@@ -49,7 +49,6 @@ export default {
       return apiService.apiLinks;
     },
     async handleSelect(item) {
-      console.log(item.link)
       this.loading = true;
       const apiData = await apiService.getApiData(item.link);
       const datastoreData = datastoreService.getCollections(item.value);

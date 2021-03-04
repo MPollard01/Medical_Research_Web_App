@@ -7,7 +7,6 @@ import RegisterConfirmation from "@/views/RegisterConfirmation";
 import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
 import AddData from "@/views/AddData.vue";
-import AdvancedSearch from '@/views/AdvancedSearch'
 
 const routes = [
   {
@@ -59,32 +58,10 @@ const routes = [
     },
   },
   {
-    path: "/search",
-    name: "Search",
-    component: AdvancedSearch,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
     path: "/:catchAll(.*)",
     redirect: "/",
   },
 ];
-
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = firebase.auth().currentUser;
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const loggedOut = to.matched.some((record) => record.meta.loggedOut);
-
-  if (requiresAuth && !isAuthenticated) {
-    next("/login");
-  } else if (loggedOut && isAuthenticated) {
-    next("/dashboard");
-  } else {
-    next();
-  }
-});
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
