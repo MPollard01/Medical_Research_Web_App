@@ -1,6 +1,5 @@
 <template>
     <div class="wrap">
-      <!--<ProfileCard />-->
       <div class="head">
         <h2 class="title">Dashboard</h2>
         <SearchBar @handleSearch="onSeachChild"/>
@@ -18,26 +17,19 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import {useRouter} from 'vue-router'
+import { ref } from "vue";
 import firebase from "firebase";
 import CommonChart from '@/components/CommonChart';
 import SearchBar from '@/components/SearchBar';
-//import ProfileCard from '@/components/ProfileCard';
 import Empty from '@/components/Empty';
 import InfoCard from '@/components/InfoCard';
 
 export default {
   name: "Dashboard",
+  
   setup() {
     const user = ref(null);
     const data = ref(null)
-    const router = useRouter()
-
-    onMounted(() => {
-      let searchData = router.params
-      console.log(searchData)
-    })
 
     function onSeachChild (value) {
       console.log(value);
@@ -49,7 +41,6 @@ export default {
   components: {
     CommonChart,
     SearchBar,
-    //ProfileCard,
     Empty,
     InfoCard
   },

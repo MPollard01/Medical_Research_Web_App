@@ -82,6 +82,7 @@
 import {ref, onMounted} from 'vue'
 import getCardioData from '../composables/externalData'
 import {useRouter} from 'vue-router'
+
 export default {
     setup() {
         const searchTerm = ref('')
@@ -168,7 +169,7 @@ export default {
         }
 
         function displayTerms() {
-          router.push({
+          router.replace({
             name: 'Dashboard',
             params: catTerms.value
           })
