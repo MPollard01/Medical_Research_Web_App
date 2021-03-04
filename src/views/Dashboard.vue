@@ -23,7 +23,6 @@ import {useRouter} from 'vue-router'
 import firebase from "firebase";
 import CommonChart from '@/components/CommonChart';
 import SearchBar from '@/components/SearchBar';
-//import ProfileCard from '@/components/ProfileCard';
 import Empty from '@/components/Empty';
 import InfoCard from '@/components/InfoCard';
 
@@ -49,7 +48,6 @@ export default {
   components: {
     CommonChart,
     SearchBar,
-    //ProfileCard,
     Empty,
     InfoCard
   },
