@@ -17,27 +17,33 @@
           <input
             type="email"
             name="email"
-            v-model="email"
+            v-model="email.value"
+            :ref="email.ref"
             placeholder="Email"
             class="input email-input"
             required
           />
+          <span class="error" v-if="email.error">{{ email.error.message }}</span>
           <input
             type="password"
             name="password"
-            v-model="password"
+            v-model="password.value"
+            :ref="password.ref"
             placeholder="Password"
             class="input password-input"
             required
           />
+          <span class="error" v-if="password.error">{{ password.error.message }}</span>
           <input
             type="password"
             name="confirm-password"
-            v-model="confirmPassword"
+            v-model="confirmPassword.value"
+            :ref="confirmPassword.ref"
             placeholder="Confirm Password"
             class="input password-input"
             required
           />
+          <span class="error" v-if="confirmPassword.error">{{ confirmPassword.error.message }}</span>
         </div>
         <br />
         <button @click="continueRegister" class="button">Continue</button>
@@ -57,22 +63,26 @@
             <input
               type="text"
               name="name"
-              v-model="name"
+              v-model="name.value"
+              :ref="name.ref"
               placeholder="Name"
               class="input name-input required"
               required
             />
           </span>
+          <span class="error" v-if="name.error">{{ name.error.message }}</span>
           <span class="required">
             <input
               type="text"
               name="address"
-              v-model="address"
+              v-model="address.value"
+              :ref="address.ref"
               placeholder="Address"
               class="input address-input"
               required
             />
           </span>
+          <span class="error" v-if="address.error">{{ address.error.message }}</span>
           <input
             type="text"
             name="phone-number"
@@ -84,12 +94,14 @@
             <input
               type="text"
               name="institution-affiliation"
-              v-model="institution"
+              v-model="institution.value"
+              :ref="institution.ref"
               placeholder="Instutional affiliation"
               class="input instutional-affiliation-input required"
               required
             />
           </span>
+          <span class="error" v-if="institution.error">{{ institution.error.message }}</span>
         </div>
         <br />
         <button @click="finishRegister" class="button">Register</button>
@@ -109,24 +121,76 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import validation from "@/utils/Validation";
 import authenticationService from "@/services/AuthenticationService";
+import {useForm} from 'vue-hooks-form'
 
 export default {
   name: "Register",
   setup() {
-    const email = ref("");
-    const password = ref("");
-    const confirmPassword = ref("");
-    const name = ref("");
-    const address = ref("");
+    const { useField, handleSubmit } = useForm({
+      defaultValues: {},
+    })
+    const email = useField('email', {
+      rule: { required: true },
+    })
+    const password = useField('password', {
+      rule: { required: true, min: 10},
+    })
+    const confirmPassword = useField('confirm password', {
+      rule: { 
+        required: true,
+        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
+          if (value !== password.value) {
+            return reject(new Error('passwords must match'))
+          }
+          return resolve()
+        }), 
+      },
+    })
+    // const email = ref("");
+    // const password = ref("");
+    //const confirmPassword = ref("");
+    const showNextForm = ref(false);
+    const name = useField('name', {
+      rule: { 
+        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
+          if (showNextForm.value && !value) {
+            return reject(new Error('Please enter name'))
+          }
+          return resolve()
+        })  
+      }
+    })
+    const address = useField('address', {
+      rule: { 
+        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
+          if (showNextForm.value && !value) {
+            return reject(new Error('Please enter address'))
+          }
+          return resolve()
+        })  
+      }
+    })
+    const institution = useField('institution', {
+      rule: { 
+        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
+          if (showNextForm.value && !value) {
+            return reject(new Error('Please enter institution'))
+          }
+          return resolve()
+        })  
+      }
+    })
+    //const name = ref("");
+    //const address = ref("");
     const phoneNumber = ref("");
-    const institution = ref("");
+    //const institution = ref("");
     const loading = ref(false);
     const errorRegistration = ref(null);
-    const showNextForm = ref(false);
+    
 
     const router = useRouter();
 
-    function continueRegister() {
+    const continueRegister = async () => {
       errorRegistration.value = validation.continueRegister(
         email.value,
         password.value,
@@ -142,7 +206,7 @@ export default {
       showNextForm.value = false;
     }
 
-    async function finishRegister() {
+    const finishRegister = async () => {
       loading.value = true;
       errorRegistration.value = validation.finishRegister(
         name.value,
@@ -190,9 +254,9 @@ export default {
       loading,
       errorRegistration,
       showNextForm,
-      continueRegister,
+      continueRegister: handleSubmit(continueRegister),
       goBack,
-      finishRegister,
+      finishRegister: handleSubmit(finishRegister),
     };
   },
 };
@@ -219,4 +283,19 @@ export default {
 .asterisk {
   color: #c28adb;
 }
+
+.title {
+    margin-bottom: 2em;
+    text-align: center;
+  }
+
+  .dont-have-account {
+    text-align: center;
+  }
+
+  input {
+    outline: none;
+  }
+
+  
 </style>

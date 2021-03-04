@@ -40,6 +40,44 @@ body {
   color: #707070;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  margin-top: 60px;
+}
+
+.wrap {
+  margin: 0 0 30px 10%;
+  padding-right: 30px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  height: 100vh;
+}
+.wrap::-webkit-scrollbar {
+  width: 8px;
+}
+
+.wrap::-webkit-scrollbar-track-piece:start {
+    background: transparent;
+    margin-top: 65px;
+}
+
+.wrap::-webkit-scrollbar-track-piece:end {
+    background: transparent;
+    margin-bottom: 5px; 
+}
+ 
+.wrap::-webkit-scrollbar-track {
+  display: none;
+}
+ 
+.wrap::-webkit-scrollbar-thumb {
+  background-color: rgba(182, 180, 180, 0.568);
+  border-radius: 5px;
 }
 
 .page {
@@ -100,6 +138,7 @@ a.button {
   font-size: 18px;
   font-weight: bold;
   border: none;
+  outline: none;
 }
 
 .invert {
@@ -110,6 +149,7 @@ a.button {
 
 .button:hover {
   cursor: pointer;
+  background-color: #e2a8fd;
 }
 
 .link {
@@ -122,9 +162,13 @@ a.button {
 }
 
 .error {
-  background-color: #d16565;
-  color: white;
-  padding: 10px;
+  color: red;
+  padding: 0;
+  margin: 0;
+  opacity: .6;
+  font-size: 12px;
+  line-height: 15px;
+  
 }
 
 .title {
@@ -158,4 +202,7 @@ a.button {
   top: 50%;
   z-index: 100;
 }
+
+
+
 </style>
