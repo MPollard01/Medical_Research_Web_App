@@ -62,19 +62,19 @@ body {
 }
 
 .wrap::-webkit-scrollbar-track-piece:start {
-    background: transparent;
-    margin-top: 65px;
+  background: transparent;
+  margin-top: 65px;
 }
 
 .wrap::-webkit-scrollbar-track-piece:end {
-    background: transparent;
-    margin-bottom: 5px; 
+  background: transparent;
+  margin-bottom: 5px;
 }
- 
+
 .wrap::-webkit-scrollbar-track {
   display: none;
 }
- 
+
 .wrap::-webkit-scrollbar-thumb {
   background-color: rgba(182, 180, 180, 0.568);
   border-radius: 5px;
@@ -165,10 +165,9 @@ a.button {
   color: red;
   padding: 0;
   margin: 0;
-  opacity: .6;
+  opacity: 0.6;
   font-size: 12px;
   line-height: 15px;
-  
 }
 
 .title {
@@ -202,7 +201,4 @@ a.button {
   top: 50%;
   z-index: 100;
 }
-
-
-
 </style>

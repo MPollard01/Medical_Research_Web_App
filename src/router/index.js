@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
-import firebase from 'firebase'
+import firebase from "firebase";
 import Home from "@/views/Home";
 import Login from "@/views/Login";
 import Register from "@/views/Register";
 import RegisterConfirmation from "@/views/RegisterConfirmation";
 import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
-import AddData from "@/views/AddData.vue";
-import AdvancedSearch from '@/views/AdvancedSearch'
+import AddData from "@/views/AddData";
+import DeleteData from "@/views/DeleteData";
+import AdvancedSearch from "@/views/AdvancedSearch";
 
 const routes = [
   {
@@ -20,16 +21,16 @@ const routes = [
     name: "Login",
     component: Login,
     meta: {
-      loggedOut: true
-    }
+      loggedOut: true,
+    },
   },
   {
     path: "/register",
     name: "Register",
     component: Register,
     meta: {
-      loggedOut: true
-    }
+      loggedOut: true,
+    },
   },
   {
     path: "/register-confirmation",
@@ -59,6 +60,14 @@ const routes = [
     },
   },
   {
+    path: "/delete-data",
+    name: "DeleteData",
+    component: DeleteData,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/search",
     name: "Search",
     component: AdvancedSearch,
@@ -71,20 +80,6 @@ const routes = [
     redirect: "/",
   },
 ];
-
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = firebase.auth().currentUser;
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-  const loggedOut = to.matched.some((record) => record.meta.loggedOut);
-
-  if (requiresAuth && !isAuthenticated) {
-    next("/login");
-  } else if (loggedOut && isAuthenticated) {
-    next("/dashboard");
-  } else {
-    next();
-  }
-});
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
