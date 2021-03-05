@@ -182,15 +182,13 @@ export default {
     let csv = [];
 
     function handleSuccess(response, file, fileList) {
-      console.log(file);
       console.log(fileList[0]);
       Papa.parse(file.raw, {
         header: true,
         complete: function(results) {
-          console.log(results);
           csv = results.data;
           let columnLen = Object.keys(csv[0]).length;
-          if (columnLen > 2) {
+          if (columnLen > 3) {
             ElMessageBox.alert("This file exceeds 2 columns", "Removing File", {
               confirmButtonText: "OK",
               callback: (action) => {
@@ -275,9 +273,6 @@ export default {
 }
 .el-row {
   margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 .el-col {
   border-radius: 4px;

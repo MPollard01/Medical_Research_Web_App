@@ -30,26 +30,22 @@
     class="el-menu-vertical-demo"
     :collapse="isCollapsed"
     router
-  >
-    <el-menu-item index="Dashboard">
-      <i class="el-icon-s-home el-icon"></i>
-      <template #title>Dashboard</template>
-    </el-menu-item>
-    <el-menu-item index="Search">
-      <i class="el-icon-search el-icon"></i>
-      <template #title>Search</template>
-    </el-menu-item>
-
-    <el-menu-item index="add-data">
-      <i class="el-icon-plus el-icon"></i>
-      <template #title>Add data</template>
-    </el-menu-item>
-
-    <el-menu-item index="delete-data">
-      <i class="el-icon-delete el-icon"></i>
-      <template #title>Delete data</template>
-    </el-menu-item>
-  </el-menu>
+    >
+  <el-menu-item index="Dashboard">
+    <i class="el-icon-s-home el-icon"></i>
+    <template #title>Dashboard</template>
+  </el-menu-item>
+  
+  <el-menu-item index="add-data">
+    <i class="el-icon-plus el-icon"></i>
+    <template #title>Add data</template>
+  </el-menu-item>
+ 
+  <el-menu-item index="delete-data">
+    <i class="el-icon-delete el-icon"></i>
+    <template #title>Delete data</template>
+  </el-menu-item>
+</el-menu>
 </template>
 
 <script>
@@ -154,5 +150,9 @@ export default {
   position: fixed;
   width: 100%;
   z-index: 1;
+}
+
+.el-menu {
+  z-index: 999;
 }
 </style>

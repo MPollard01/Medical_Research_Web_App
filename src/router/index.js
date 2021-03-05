@@ -8,7 +8,6 @@ import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
 import AddData from "@/views/AddData";
 import DeleteData from "@/views/DeleteData";
-import AdvancedSearch from "@/views/AdvancedSearch";
 
 const routes = [
   {
@@ -63,14 +62,6 @@ const routes = [
     path: "/delete-data",
     name: "DeleteData",
     component: DeleteData,
-    meta: {
-      requiresAuth: true,
-    },
-  },
-  {
-    path: "/search",
-    name: "Search",
-    component: AdvancedSearch,
     meta: {
       requiresAuth: true,
     },
