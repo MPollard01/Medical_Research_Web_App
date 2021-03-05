@@ -16,17 +16,17 @@
     <el-menu-item v-if="!loggedIn" index="Login">Login</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Register">Register</el-menu-item>
     <el-submenu v-if="loggedIn">
-      <template v-if="user" #title>{{user.email}}</template>
+      <template v-if="user" #title>{{ user.email }}</template>
       <el-menu-item @click="logout" index="logout">Logout</el-menu-item>
     </el-submenu>
   </el-menu>
 
-  <el-menu 
+  <el-menu
     v-if="loggedIn"
     background-color="#727eaf"
     active-text-color="#c28adb"
-    text-color="#fff" 
-    :default-active="activeIndex2" 
+    text-color="#fff"
+    :default-active="activeIndex2"
     class="el-menu-vertical-demo"
     :collapse="isCollapsed"
     router
@@ -41,7 +41,7 @@
     <template #title>Add data</template>
   </el-menu-item>
  
-  <el-menu-item index="Delete">
+  <el-menu-item index="DeleteData">
     <i class="el-icon-delete el-icon"></i>
     <template #title>Delete data</template>
   </el-menu-item>
@@ -57,10 +57,10 @@ export default {
   name: "MainNav",
   setup() {
     const activeIndex = ref("");
-    const activeIndex2 = ref("")
+    const activeIndex2 = ref("");
     const loggedIn = ref(false);
     const user = ref(null);
-    const isCollapsed = ref(true)
+    const isCollapsed = ref(true);
 
     const router = useRouter();
 
@@ -81,28 +81,35 @@ export default {
         });
     }
 
-    return { activeIndex, loggedIn, user, handleSelect, logout, isCollapsed, activeIndex2 };
+    return {
+      activeIndex,
+      loggedIn,
+      user,
+      handleSelect,
+      logout,
+      isCollapsed,
+      activeIndex2,
+    };
   },
-  mounted () {
+  mounted() {
     firebase.auth().onAuthStateChanged((user) => {
-      if(user) {
+      if (user) {
         this.loggedIn = true;
-        
       }
     });
   },
-  watch:{
-    $route (to, from){
+  watch: {
+    $route(to, from) {
       firebase.auth().onAuthStateChanged((user) => {
-        if(user) {
+        if (user) {
           this.loggedIn = true;
-          this.user = user
+          this.user = user;
         }
       });
       console.log(to, from);
       this.activeIndex = this.$router.currentRoute._value.name;
-    }
-  } 
+    },
+  },
 };
 </script>
 
@@ -128,21 +135,20 @@ export default {
 }
 
 .el-menu-vertical-demo {
-    position: fixed;
-    height: 100%;
-    border: none;
-    top: 60px;
-    z-index: 1;
-  }
+  position: fixed;
+  height: 100%;
+  border: none;
+  top: 60px;
+  z-index: 1;
+}
 
-  .el-icon {
-    color: #fff;
-  }
+.el-icon {
+  color: #fff;
+}
 
-  .el-menu-demo {
-    position: fixed;
-    width: 100%;
-    z-index: 1;
-    
-  }
+.el-menu-demo {
+  position: fixed;
+  width: 100%;
+  z-index: 1;
+}
 </style>
