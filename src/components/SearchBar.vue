@@ -24,13 +24,15 @@
 <script>
 import datastoreService from '@/services/DatastoreService';
 import apiService from '@/services/APIService';
+import firebase from "firebase";
 
 export default {
   data() {
       return {
         links: [],
         query: '',
-        loading: false
+        loading: false,
+        user: null
       }
   },
   methods: {
@@ -51,7 +53,7 @@ export default {
     async handleSelect(item) {
       this.loading = true;
       const apiData = await apiService.getApiData(item.link);
-      const datastoreData = datastoreService.getCollections(item.value);
+      const datastoreData = await datastoreService.getDataByGene(this.user, item.value);
 
       if (apiData || datastoreData) {
         this.loading = false;
@@ -67,6 +69,13 @@ export default {
   },
   mounted () {
     this.links = this.loadAll();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user = user;
+      } else {
+        this.user = null;
+      }
+    });
   }
 };
 </script>

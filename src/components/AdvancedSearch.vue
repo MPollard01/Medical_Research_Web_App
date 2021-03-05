@@ -99,6 +99,7 @@ export default {
         catTerms: null,
         disease: null,
         loading: false,
+        diseaseA: null,
         hpoBaseUrl: 'https://hpo.jax.org/api/hpo'
       }
     },
@@ -141,7 +142,7 @@ export default {
         }
 
         async function searchDiseaseAssoc(event) {
-          this.disease = event
+          this.diseaseA = event
         }
 
         return {
@@ -176,7 +177,7 @@ export default {
       },
       async displayTermsGene () {
         this.loading = true;
-        const id = this.diseaseAsoc.find(i => i.diseaseName === this.disease).diseaseId
+        const id = this.diseaseAsoc.find(i => i.diseaseName === this.diseaseA).diseaseId
         let url = this.hpoBaseUrl + '/disease/' + id
         const data = await apiService.fetchCardioData(url)
         const cardioData = data && data.cardioData
@@ -187,7 +188,7 @@ export default {
 
         this.$emit('handleAdvancedSearch', {
           terms: apiService.findData(cardioData)[0].terms,
-          name: this.disease
+          name: this.diseaseA
         })
       },
     }

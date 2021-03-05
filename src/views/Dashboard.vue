@@ -12,7 +12,7 @@
         <div v-if="data || advancedData" class="content">
           <InfoCard v-if="data && data.apiData" :terms="data.apiData.terms" :name="data.name"/>
           <InfoCard v-if="advancedData" :terms="advancedData.terms" :name="advancedData.name"/>
-          <CommonChart v-if="data && data.datastoreData" :graphs="data.datastoreData.graphs"/>
+          <CommonChart v-if="data && data.datastoreData" :graphs="data.datastoreData"/>
         </div>
         <div v-if="!data && !advancedData" class="empty">
           <Empty />
@@ -40,8 +40,8 @@ export default {
     const showAdvancedSearch = ref(false);
 
     function onSeachChild (value) {
-      console.log(value);
-      data.value = value;
+      console.log(value)
+      data.value = value
       advancedData.value = null
     }
 

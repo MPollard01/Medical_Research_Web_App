@@ -41,7 +41,7 @@
     <template #title>Add data</template>
   </el-menu-item>
  
-  <el-menu-item index="DeleteData">
+  <el-menu-item index="delete-data">
     <i class="el-icon-delete el-icon"></i>
     <template #title>Delete data</template>
   </el-menu-item>
@@ -150,5 +150,9 @@ export default {
   position: fixed;
   width: 100%;
   z-index: 1;
+}
+
+.el-menu {
+  z-index: 999;
 }
 </style>

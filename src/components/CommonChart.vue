@@ -13,8 +13,8 @@
         Graphs<i class="el-icon-arrow-down el-icon--right"></i>
       </el-button>
       <template v-slot:dropdown>
-      <el-dropdown-menu v-for="(value, name) in graphs" :key="name">
-        <el-dropdown-item :command="{value, name}">{{name}}</el-dropdown-item>
+      <el-dropdown-menu v-for="graph in graphs" :key="graph">
+        <el-dropdown-item :command="graph">{{graph.title}}</el-dropdown-item>
       </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import datastoreService from '@/services/DatastoreService'
 import graph from '@/utils/Graph'
 import VueApexCharts from 'vue3-apexcharts'
 
@@ -103,19 +102,18 @@ export default {
       }
   },
   methods: {
-    async handleCommand(collection) {
+    async handleCommand(graphData) {
       this.loading = true;
-      const data = await datastoreService.getData(collection.value);
 
-      if (data) {
+      if (graphData) {
         this.loading = false;
-        const chartOptions = graph.getChartOptions(data, collection.name);
-        const series = graph.getSeries(data);
+        const chartOptions = graph.getChartOptions(graphData);
+        const series = graph.getSeries(graphData);
         this.series = series;
         this.chartOptions = {
           ...this.chartOptions,
           title: {
-            text: collection.name,
+            text: graphData.title,
             align: 'left'
           },
           xaxis: chartOptions.xaxis,
