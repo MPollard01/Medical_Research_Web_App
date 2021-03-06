@@ -27,7 +27,9 @@
           placeholder="Password"
           class="input password-input"
         />
-        <span class="error" v-if="password.error">{{ password.error.message }}</span>
+        <span class="error" v-if="password.error">{{
+          password.error.message
+        }}</span>
       </div>
       <br />
       <button class="button" @click="submit">Sign in</button>
@@ -46,21 +48,21 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import validation from "@/utils/Validation";
 import authenticationService from "@/services/AuthenticationService";
-import {ElMessage} from 'element-plus'
-import {useForm} from 'vue-hooks-form'
+import { ElMessage } from "element-plus";
+import { useForm } from "vue-hooks-form";
 
 export default {
   name: "Login",
   setup() {
     const { useField, handleSubmit } = useForm({
       defaultValues: {},
-    })
-    const email = useField('email', {
+    });
+    const email = useField("email", {
       rule: { required: true },
-    })
-    const password = useField('password', {
+    });
+    const password = useField("password", {
       rule: { required: true },
-    })
+    });
     //const email = ref("");
     //const password = ref("");
     const loading = ref(false);
@@ -78,48 +80,52 @@ export default {
       };
 
       if (!errorLogin.value) {
-        const { user, errors } = await authenticationService.login(info);
+        const { user, error } = await authenticationService.login(info);
 
         loading.value = false;
 
-        if (errors) {
-          errorLogin.value = errors;
+        if (error) {
+          errorLogin.value = error;
           ElMessage.error({
-            type: 'error',
+            type: "error",
             message: errorLogin.value,
-            duration: 5000
-          })
+            duration: 5000,
+          });
         } else if (user) {
           router.replace({ name: "Dashboard" });
         }
       } else {
         loading.value = false;
       }
-    }
+    };
 
-    return { email, password, loading, errorLogin, submit: handleSubmit(submit) };
+    return {
+      email,
+      password,
+      loading,
+      errorLogin,
+      submit: handleSubmit(submit),
+    };
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .title {
-    margin-bottom: 2em;
-    text-align: center;
-  }
+.title {
+  margin-bottom: 2em;
+  text-align: center;
+}
 
-  .dont-have-account {
-    text-align: center;
-  }
+.dont-have-account {
+  text-align: center;
+}
 
-  input {
-    outline: none;
-  }
+input {
+  outline: none;
+}
 
-  button {
-    outline: none;
-  }
-
-  
+button {
+  outline: none;
+}
 </style>
