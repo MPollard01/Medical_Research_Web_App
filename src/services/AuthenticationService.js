@@ -3,7 +3,7 @@ import { firebaseAuthentication } from "@/firebase/database";
 
 const register = async (info) => {
   let user;
-  let errors;
+  let error;
 
   try {
     const response = await firebaseAuthentication.createUserWithEmailAndPassword(
@@ -26,18 +26,18 @@ const register = async (info) => {
 
     await user.sendEmailVerification(actionCodeSettings);
   } catch (err) {
-    errors = err.message;
+    error = err.message;
   }
 
   return {
     user,
-    errors,
+    error,
   };
 };
 
 const login = async (info) => {
   let user;
-  let errors;
+  let error;
 
   try {
     const response = await firebaseAuthentication.signInWithEmailAndPassword(
@@ -46,12 +46,12 @@ const login = async (info) => {
     );
     user = response.user;
   } catch (err) {
-    errors = err.message;
+    error = err.message;
   }
 
   return {
     user,
-    errors,
+    error,
   };
 };
 

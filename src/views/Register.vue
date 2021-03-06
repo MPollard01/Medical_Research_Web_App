@@ -23,7 +23,9 @@
             class="input email-input"
             required
           />
-          <span class="error" v-if="email.error">{{ email.error.message }}</span>
+          <span class="error" v-if="email.error">{{
+            email.error.message
+          }}</span>
           <input
             type="password"
             name="password"
@@ -33,7 +35,9 @@
             class="input password-input"
             required
           />
-          <span class="error" v-if="password.error">{{ password.error.message }}</span>
+          <span class="error" v-if="password.error">{{
+            password.error.message
+          }}</span>
           <input
             type="password"
             name="confirm-password"
@@ -43,7 +47,9 @@
             class="input password-input"
             required
           />
-          <span class="error" v-if="confirmPassword.error">{{ confirmPassword.error.message }}</span>
+          <span class="error" v-if="confirmPassword.error">{{
+            confirmPassword.error.message
+          }}</span>
         </div>
         <br />
         <button @click="continueRegister" class="button">Continue</button>
@@ -82,7 +88,9 @@
               required
             />
           </span>
-          <span class="error" v-if="address.error">{{ address.error.message }}</span>
+          <span class="error" v-if="address.error">{{
+            address.error.message
+          }}</span>
           <input
             type="text"
             name="phone-number"
@@ -101,7 +109,9 @@
               required
             />
           </span>
-          <span class="error" v-if="institution.error">{{ institution.error.message }}</span>
+          <span class="error" v-if="institution.error">{{
+            institution.error.message
+          }}</span>
         </div>
         <br />
         <button @click="finishRegister" class="button">Register</button>
@@ -121,72 +131,70 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import validation from "@/utils/Validation";
 import authenticationService from "@/services/AuthenticationService";
-import {useForm} from 'vue-hooks-form'
+import { ElMessage } from "element-plus";
+import { useForm } from "vue-hooks-form";
 
 export default {
   name: "Register",
   setup() {
     const { useField, handleSubmit } = useForm({
       defaultValues: {},
-    })
-    const email = useField('email', {
+    });
+    const email = useField("email", {
       rule: { required: true },
-    })
-    const password = useField('password', {
-      rule: { required: true, min: 10},
-    })
-    const confirmPassword = useField('confirm password', {
-      rule: { 
+    });
+    const password = useField("password", {
+      rule: { required: true, min: 6 },
+    });
+    const confirmPassword = useField("confirm password", {
+      rule: {
         required: true,
-        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
-          if (value !== password.value) {
-            return reject(new Error('passwords must match'))
-          }
-          return resolve()
-        }), 
+        asyncValidator: async (rule, value) =>
+          new Promise((resolve, reject) => {
+            if (value !== password.value) {
+              return reject(new Error("Passwords must match!"));
+            }
+            return resolve();
+          }),
       },
-    })
-    // const email = ref("");
-    // const password = ref("");
-    //const confirmPassword = ref("");
+    });
     const showNextForm = ref(false);
-    const name = useField('name', {
-      rule: { 
-        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
-          if (showNextForm.value && !value) {
-            return reject(new Error('Please enter name'))
-          }
-          return resolve()
-        })  
-      }
-    })
-    const address = useField('address', {
-      rule: { 
-        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
-          if (showNextForm.value && !value) {
-            return reject(new Error('Please enter address'))
-          }
-          return resolve()
-        })  
-      }
-    })
-    const institution = useField('institution', {
-      rule: { 
-        asyncValidator: async (rule, value) => new Promise((resolve, reject) => {
-          if (showNextForm.value && !value) {
-            return reject(new Error('Please enter institution'))
-          }
-          return resolve()
-        })  
-      }
-    })
-    //const name = ref("");
-    //const address = ref("");
+    const name = useField("name", {
+      rule: {
+        asyncValidator: async (rule, value) =>
+          new Promise((resolve, reject) => {
+            if (showNextForm.value && !value) {
+              return reject(new Error("Please enter a name"));
+            }
+            return resolve();
+          }),
+      },
+    });
+    const address = useField("address", {
+      rule: {
+        asyncValidator: async (rule, value) =>
+          new Promise((resolve, reject) => {
+            if (showNextForm.value && !value) {
+              return reject(new Error("Please enter an address"));
+            }
+            return resolve();
+          }),
+      },
+    });
+    const institution = useField("institution", {
+      rule: {
+        asyncValidator: async (rule, value) =>
+          new Promise((resolve, reject) => {
+            if (showNextForm.value && !value) {
+              return reject(new Error("Please enter an institution"));
+            }
+            return resolve();
+          }),
+      },
+    });
     const phoneNumber = ref("");
-    //const institution = ref("");
     const loading = ref(false);
     const errorRegistration = ref(null);
-    
 
     const router = useRouter();
 
@@ -200,7 +208,7 @@ export default {
       if (!errorRegistration.value) {
         showNextForm.value = true;
       }
-    }
+    };
 
     function goBack() {
       showNextForm.value = false;
@@ -230,6 +238,11 @@ export default {
 
         if (error) {
           errorRegistration.value = error;
+          ElMessage.error({
+            type: "error",
+            message: errorRegistration.value,
+            duration: 5000,
+          });
         } else if (user) {
           router.replace({
             name: "RegisterConfirmation",
@@ -241,7 +254,7 @@ export default {
       } else {
         loading.value = false;
       }
-    }
+    };
 
     return {
       email,
@@ -285,17 +298,15 @@ export default {
 }
 
 .title {
-    margin-bottom: 2em;
-    text-align: center;
-  }
+  margin-bottom: 2em;
+  text-align: center;
+}
 
-  .dont-have-account {
-    text-align: center;
-  }
+.dont-have-account {
+  text-align: center;
+}
 
-  input {
-    outline: none;
-  }
-
-  
+input {
+  outline: none;
+}
 </style>
