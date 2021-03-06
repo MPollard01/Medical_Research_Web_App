@@ -1,12 +1,10 @@
-const getChartOptions = (data, name) => {
-    const axisTitleArr = name.split("vs");
+const getChartOptions = (data) => {
+    const axisTitleArr = data.title.split("vs");
     const yTitle = axisTitleArr[0];
     const xTitle = axisTitleArr[1];
-    const xCategories = data.map(obj => {
+    const xCategories = data.data.map(obj => {
         return `${obj.x}`;
     })
-    const yMin = 0;
-    const yMax = 10;
 
     const chartOptions = {
         xaxis: {
@@ -18,9 +16,7 @@ const getChartOptions = (data, name) => {
         yaxis: {
           title: {
             text: yTitle
-          },
-          min: yMin,
-          max: yMax
+          }
         }
     }
 
@@ -28,21 +24,23 @@ const getChartOptions = (data, name) => {
 };
 
 const getSeries = (data) => {
-    const names = Object.keys(data[0]).filter((key) => {
+    const names = Object.keys(data.data[0]).filter((key) => {
         if(key !== 'x') {
             return key
         }
         return null
     });
+  
     const series = names && names.map(name => {
         return {
-                  name: name,
-                  data: data.map(obj => {
-                      return obj[name]
-                  })
-                }
-    })
+          name: name,
+          data: data.data.map(obj => {
 
+              return obj[name] ? obj[name] : null
+          })
+        }
+    })
+  
     return series;
 }
 

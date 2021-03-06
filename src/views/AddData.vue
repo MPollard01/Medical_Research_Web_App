@@ -17,66 +17,86 @@
               </div>
             </template>
             <div>
-                <el-form status-icon label-width="180px">
-                    <el-form-item label="Phenotype">
-                        <el-select
-                          v-model="ctypeVal.value"
-                          :ref="ctypeVal.ref"
-                          filterable
-                          clearable
-                          allow-create
-                          placeholder="select or type own"
-                          >
-                          <el-option
-                            v-for="item in ctype"
-                            :key="item"
-                            :label="item"
-                            :value="item">
-                          </el-option>
-                        </el-select>
-                        <span class="error" v-if="ctypeVal.error">{{ ctypeVal.error.message }}</span>
-                    </el-form-item>
-                    <el-form-item label="Gene Name">
-                        <el-select
-                          v-model="geneName.value"
-                          :ref="geneName.ref"
-                          filterable
-                          clearable
-                          allow-create
-                          placeholder="select or type name">
-                          <el-option
-                            v-for="item in geneNames"
-                            :key="item"
-                            :label="item"
-                            :value="item">
-                          </el-option>
-                        </el-select>
-                        <span class="error" v-if="geneName.error">{{ geneName.error.message }}</span>
-                    </el-form-item>
-                    <el-form-item label="Study Title">
-                        <el-select
-                          v-model="title.value"
-                          :ref="title.ref"
-                          filterable
-                          clearable
-                          allow-create
-                          placeholder="select or type title">
-                          <el-option
-                            v-for="item in titles"
-                            :key="item"
-                            :label="item"
-                            :value="item">
-                          </el-option>
-                        </el-select>
-                        <span class="error" v-if="title.error">{{ title.error.message }}</span>
-                    </el-form-item>
-                    <el-form-item label="Additional Notes (optional)">
-                        <el-input type="textarea" rows="5" resize="none" maxlength="200" show-word-limit v-model="notes"></el-input>
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" class="upload" @click="onSubmit">Upload</el-button>
-                    </el-form-item>
-                </el-form>
+              <el-form status-icon label-width="180px">
+                <el-form-item label="Phenotype">
+                  <el-select
+                    v-model="cardioType.value"
+                    :ref="cardioType.ref"
+                    filterable
+                    clearable
+                    allow-create
+                    placeholder="select or type own"
+                  >
+                    <el-option
+                      v-for="item in cardioTypes"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span class="error" v-if="cardioType.error">{{
+                    cardioType.error.message
+                  }}</span>
+                </el-form-item>
+                <el-form-item label="Gene Name">
+                  <el-select
+                    v-model="geneName.value"
+                    :ref="geneName.ref"
+                    filterable
+                    clearable
+                    allow-create
+                    placeholder="select or type name"
+                  >
+                    <el-option
+                      v-for="item in geneNames"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span class="error" v-if="geneName.error">{{
+                    geneName.error.message
+                  }}</span>
+                </el-form-item>
+                <el-form-item label="Study Title">
+                  <el-select
+                    v-model="title.value"
+                    :ref="title.ref"
+                    filterable
+                    clearable
+                    allow-create
+                    placeholder="select or type title"
+                  >
+                    <el-option
+                      v-for="item in studyTitles"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    >
+                    </el-option>
+                  </el-select>
+                  <span class="error" v-if="title.error">{{
+                    title.error.message
+                  }}</span>
+                </el-form-item>
+                <el-form-item label="Additional Notes (optional)">
+                  <el-input
+                    type="textarea"
+                    rows="5"
+                    resize="none"
+                    maxlength="200"
+                    show-word-limit
+                    v-model="notes"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" class="upload" @click="onSubmit"
+                    >Upload</el-button
+                  >
+                </el-form-item>
+              </el-form>
             </div>
           </el-card>
         </div>
@@ -104,10 +124,12 @@
                 accept=".csv"
               >
                 <p>
-                    The CSV data will be used to plot graphical charts that will be displayed when
-                    this data is searched.
+                  The CSV data will be used to plot graphical charts that will
+                  be displayed when this data is searched.
                 </p>
-                <el-button size="small" type="success" >Click to upload</el-button>
+                <el-button size="small" type="success"
+                  >Click to upload</el-button
+                >
                 <template #tip>
                   <div class="el-upload__tip">
                     Upload CSV file
@@ -123,119 +145,134 @@
 </template>
 
 <script>
-import {ref} from 'vue'
-import {useForm} from 'vue-hooks-form'
-import {ElMessage, ElMessageBox} from 'element-plus'
-import Papa from 'papaparse'
+import { ref } from "vue";
+import firebase from "firebase";
 import { firebaseFireStore, timestamp } from "@/firebase/database";
+import { useForm } from "vue-hooks-form";
+import { ElMessage, ElMessageBox } from "element-plus";
+import Papa from "papaparse";
+
+import cardioTypes from "@/assets/cardioTypes";
+import geneNames from "@/assets/geneNames";
+import studyTitles from "@/assets/studyTitles";
+
 export default {
   name: "AddData",
-   setup() {
-     const ctype = ref(['Hypertrophic', 'Dilated', 'Restrictive', 
-                        'Left Ventricular Non-compaction', 
-                        'Arrhythmogenic Right Ventricular Dysplasia'])
-     
-     const geneNames = ref(['MYBPC3', 'MYH7', 'TNNT', 'TPM1'])
-     
-     const titles = ref(['Tension vs Calcium concertration', 'Force vs Calcium concerntration',
-                         'Sarcome Length vs Time', 'Sarcomere Shortening vs Time', 
-                         'Velocity vs Time', 'sliding velocity vs calcium'])
-     const notes = ref('')
-     const upload = ref(null)
+  setup() {
+    const user = ref(null);
+    const notes = ref("");
+    const upload = ref(null);
 
-     const { useField, handleSubmit } = useForm({
+    const { useField, handleSubmit } = useForm({
       defaultValues: {},
-    })
+    });
 
-    const ctypeVal = useField('phenotype', {
+    const cardioType = useField("phenotype", {
       rule: { required: true },
-    })
+    });
 
-    const geneName = useField('gene name', {
+    const geneName = useField("gene name", {
       rule: { required: true },
-    })
+    });
 
-    const title = useField('title', {
+    const title = useField("title", {
       rule: { required: true },
-    })
+    });
 
-     let csv = []
+    let csv = [];
 
-     function handleSuccess(response, file, fileList) {
-       console.log(file)
-       console.log(fileList[0])
-       Papa.parse(file.raw, {
-         header: true,
-         complete: function (results) {
-           console.log(results)
-           csv = results.data
-           let columnLen = Object.keys(csv[0]).length
-           if(columnLen > 2) {
-            ElMessageBox.alert('This file exceeds 2 columns', 'Removing File', {
-            confirmButtonText: 'OK',
-            callback: action => {
-              ElMessage.info({
-                type: 'info',
-                message: `action: ${action} removed ${file.name}`
-              });
-              }
+    function handleSuccess(response, file, fileList) {
+      console.log(fileList[0]);
+      Papa.parse(file.raw, {
+        header: true,
+        complete: function(results) {
+          csv = results.data;
+          let columnLen = Object.keys(csv[0]).length;
+          if (columnLen > 3) {
+            ElMessageBox.alert("This file exceeds 2 columns", "Removing File", {
+              confirmButtonText: "OK",
+              callback: (action) => {
+                ElMessage.info({
+                  type: "info",
+                  message: `action: ${action} removed ${file.name}`,
+                });
+              },
             });
-            
-            upload.value.clearFiles()
-           }
-         }
-       })
-     }
-     
 
-     const onSubmit = () => {
-       ElMessageBox.confirm('Are you sure you want to send?', 'Confirm', {
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        }).then(() => {
+            upload.value.clearFiles();
+          }
+        },
+      });
+    }
+
+    const onSubmit = () => {
+      ElMessageBox.confirm("Are you sure you want to send?", "Confirm", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        type: "warning",
+      })
+        .then(() => {
           ElMessage.success({
-            type: 'success',
-            message: 'Added data to database'
+            type: "success",
+            message: "Added data to database",
           });
           const formData = {
-              cardioType: ctypeVal.value,
-              geneName: geneName.value,
-              title: title.value,
-              notes: notes.value,
-              createdAt: timestamp(),
-              data: csv
-            };
-            firebaseFireStore
-              .collection("cardioData")
-              .add(formData);
+            cardioType: cardioType.value,
+            geneName: geneName.value,
+            title: title.value,
+            notes: notes.value,
+            createdAt: timestamp(),
+            data: csv,
+          };
+          firebaseFireStore
+            .collection("users")
+            .doc(user.value.uid)
+            .collection("cardioData")
+            .add(formData);
 
-            csv = []
-        }).catch(() => {
+          csv = [];
+        })
+        .catch(() => {
           ElMessage.info({
-            type: 'info',
-            message: 'Upload canceled'
+            type: "info",
+            message: "Upload canceled",
           });
         });
-     }
+    };
 
-     return {ctype, ctypeVal, geneNames, geneName, titles, title, notes, onSubmit: handleSubmit(onSubmit), handleSuccess, upload}
-   }
-  }
-
+    return {
+      user,
+      cardioTypes,
+      geneName,
+      studyTitles,
+      cardioType,
+      geneNames,
+      title,
+      notes,
+      onSubmit: handleSubmit(onSubmit),
+      handleSuccess,
+      upload,
+    };
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.user = user;
+      } else {
+        this.user = null;
+      }
+    });
+  },
+};
 </script>
 
 <style scoped>
-
 .title {
   text-align: left;
   margin-right: 20px;
 }
 .el-row {
   margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
 }
 .el-col {
   border-radius: 4px;
@@ -267,7 +304,7 @@ p {
   color: red;
   padding: 0;
   margin: 0;
-  opacity: .6;
+  opacity: 0.6;
   font-size: 12px;
   line-height: 15px;
 }

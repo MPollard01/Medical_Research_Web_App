@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from "vue-router";
-import firebase from 'firebase'
+import firebase from "firebase";
 import Home from "@/views/Home";
 import Login from "@/views/Login";
 import Register from "@/views/Register";
 import RegisterConfirmation from "@/views/RegisterConfirmation";
 import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
-import AddData from "@/views/AddData.vue";
-import AdvancedSearch from '@/views/AdvancedSearch'
+import AddData from "@/views/AddData";
+import DeleteData from "@/views/DeleteData";
 
 const routes = [
   {
@@ -20,16 +20,16 @@ const routes = [
     name: "Login",
     component: Login,
     meta: {
-      loggedOut: true
-    }
+      loggedOut: true,
+    },
   },
   {
     path: "/register",
     name: "Register",
     component: Register,
     meta: {
-      loggedOut: true
-    }
+      loggedOut: true,
+    },
   },
   {
     path: "/register-confirmation",
@@ -59,9 +59,9 @@ const routes = [
     },
   },
   {
-    path: "/search",
-    name: "Search",
-    component: AdvancedSearch,
+    path: "/delete-data",
+    name: "DeleteData",
+    component: DeleteData,
     meta: {
       requiresAuth: true,
     },
