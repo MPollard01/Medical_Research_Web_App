@@ -35,6 +35,11 @@
     <i class="el-icon-s-home el-icon"></i>
     <template #title>Dashboard</template>
   </el-menu-item>
+
+  <el-menu-item index="Newsfeed">
+    <i class="el-icon-notebook-2 el-icon"></i>
+    <template #title>Newsfeed</template>
+  </el-menu-item>
   
   <el-menu-item index="add-data">
     <i class="el-icon-plus el-icon"></i>
