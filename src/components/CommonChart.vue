@@ -14,7 +14,14 @@
       </el-button>
       <template v-slot:dropdown>
       <el-dropdown-menu v-for="graph in graphs" :key="graph">
-        <el-dropdown-item :command="graph">{{graph.title}}</el-dropdown-item>
+        <el-dropdown-item :command="graph">
+        {{
+          getLineNames(graph.data[0]).length > 1 ? 
+          graph.title + ' (' + getLineNames(graph.data[0])[0] + ', ' + getLineNames(graph.data[0])[1] + ')'
+          :
+          graph.title + ' (' + getLineNames(graph.data[0])[0] +')'
+        }}
+        </el-dropdown-item>
       </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -120,6 +127,15 @@ export default {
           yaxis: chartOptions.yaxis
         }
       }
+    },
+    getLineNames(data) {
+      const names = Object.keys(data).filter((key) => {
+          if(key !== 'x') {
+              return key
+          }
+          return null
+      });
+      return names
     }
   },
   components: {
