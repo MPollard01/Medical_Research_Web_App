@@ -141,9 +141,8 @@ export default {
 
     function findData(whereColumn, query) {
       firebaseFireStore
-        .collection("users")
-        .doc(user.value.uid)
         .collection("cardioData")
+        .where("createdBy", "==", user.value.uid)
         .where(whereColumn, "==", query)
         .onSnapshot((snapShot) => {
           results.value = [];
@@ -160,9 +159,8 @@ export default {
 
     function deleteData(documentId) {
       firebaseFireStore
-        .collection("users")
-        .doc(user.value.uid)
         .collection("cardioData")
+        .where("createdBy", "==", user.value.uid)
         .get()
         .then((snapShot) => {
           snapShot.forEach((doc) => {
