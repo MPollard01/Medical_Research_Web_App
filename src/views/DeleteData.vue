@@ -35,7 +35,9 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findData('cardioType', cardioType)"
+                  <el-button
+                    type="primary"
+                    @click="findData('cardioType', cardioType)"
                     >Find</el-button
                   >
                 </el-form-item>
@@ -56,7 +58,9 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findData('geneName', geneName)"
+                  <el-button
+                    type="primary"
+                    @click="findData('geneName', geneName)"
                     >Find</el-button
                   >
                 </el-form-item>
@@ -94,7 +98,7 @@
               @delete-data="deleteData"
             />
             <p v-if="!results.length">
-              No results found, please refine your search.
+              Please use one of the filters above to refine your search...
             </p>
           </el-card>
         </div>
@@ -110,7 +114,7 @@ import DataResult from "@/components/DataResult";
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
 import studyTitles from "@/assets/studyTitles";
-import datastoreService from '@/services/DatastoreService'
+import datastoreService from "@/services/DatastoreService";
 
 export default {
   name: "DeleteData",
@@ -125,11 +129,16 @@ export default {
     const results = ref([]);
 
     async function findData(whereColumn, query) {
-      results.value = await datastoreService.getDataToDelete(user, whereColumn, query)
+      results.value = await datastoreService.getDataToDelete(
+        user,
+        whereColumn,
+        query
+      );
     }
 
     function deleteData(documentId) {
-      datastoreService.deleteData(documentId, user)
+      datastoreService.deleteData(documentId, user);
+      results.value = [];
     }
 
     return {

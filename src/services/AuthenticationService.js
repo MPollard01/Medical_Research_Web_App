@@ -1,5 +1,5 @@
 import firebase from "firebase";
-import { firebaseAuthentication } from "@/firebase/database";
+import { firebaseAuthentication, firebaseFireStore } from "@/firebase/database";
 
 const register = async (info) => {
   let user;
@@ -11,12 +11,26 @@ const register = async (info) => {
       info.password
     );
     user = response.user;
+
     await user.updateProfile({
+      displayName: info.name,
+      phoneNumber: info.phoneNumber,
+    });
+
+    user.value = firebase.auth().currentUser;
+
+    const userInfo = {
+      email: info.email,
       name: info.name,
       address: info.address,
       phoneNumber: info.phoneNumber,
       institution: info.institution,
-    });
+    };
+
+    firebaseFireStore
+      .collection("users")
+      .doc(user.value.uid)
+      .set(userInfo);
 
     const domain = "https://" + firebase.remoteConfig().app.options.authDomain;
 
