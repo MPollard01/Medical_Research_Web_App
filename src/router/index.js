@@ -86,6 +86,7 @@ const router = createRouter({
   routes,
 });
 
+
 router.beforeEach((to, from, next) => {
   const isAuthenticated = firebase.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
