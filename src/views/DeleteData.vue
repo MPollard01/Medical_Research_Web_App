@@ -35,7 +35,7 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findDataByCardio"
+                  <el-button type="primary" @click="findData('cardioType', cardioType)"
                     >Find</el-button
                   >
                 </el-form-item>
@@ -56,7 +56,7 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findDataByGene"
+                  <el-button type="primary" @click="findData('geneName', geneName)"
                     >Find</el-button
                   >
                 </el-form-item>
@@ -77,7 +77,7 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findDataByTitle"
+                  <el-button type="primary" @click="findData('title', title)"
                     >Find</el-button
                   >
                 </el-form-item>
@@ -106,14 +106,11 @@
 <script>
 import { ref } from "vue";
 import firebase from "firebase";
-import { firebaseFireStore } from "@/firebase/database";
-import moment from "moment";
-
 import DataResult from "@/components/DataResult";
-
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
 import studyTitles from "@/assets/studyTitles";
+import datastoreService from '@/services/DatastoreService'
 
 export default {
   name: "DeleteData",
@@ -127,77 +124,12 @@ export default {
     const title = ref("");
     const results = ref([]);
 
-    function findDataByCardio() {
-      findData("cardioType", cardioType.value);
-    }
-
-    function findDataByGene() {
-      findData("geneName", geneName.value);
-    }
-
-    function findDataByTitle() {
-      findData("title", title.value);
-    }
-
-    function findData(whereColumn, query) {
-      firebaseFireStore
-        .collection("cardioData")
-        .where("createdBy", "==", user.value.uid)
-        .where(whereColumn, "==", query)
-        .onSnapshot((snapShot) => {
-          results.value = [];
-          snapShot.forEach((doc) => {
-            console.log(doc.id + ": ");
-            console.log(doc.data());
-            var data = doc.data();
-            data.id = doc.id;
-            data.createdAt = data.createdAt.toDate();
-            results.value.push(data);
-          });
-        });
+    async function findData(whereColumn, query) {
+      results.value = await datastoreService.getDataToDelete(user, whereColumn, query)
     }
 
     function deleteData(documentId) {
-      firebaseFireStore
-        .collection("cardioData")
-        .where("createdBy", "==", user.value.uid)
-        .get()
-        .then((snapShot) => {
-          snapShot.forEach((doc) => {
-            if (doc.id === documentId) {
-              if (
-                confirm(
-                  "Are you sure you want to delete record with the id: " +
-                    doc.id +
-                    " ?"
-                )
-              ) {
-                console.log("Deleting...");
-                doc.ref
-                  .delete()
-                  .then(() => {
-                    const timestamp = moment().format("h:mma, Do MMMM YYYY");
-                    const message =
-                      "Record: " +
-                      doc.id +
-                      " was successfully deleted at " +
-                      timestamp +
-                      "!";
-                    console.log(message);
-                    alert(message);
-                  })
-                  .catch((error) => {
-                    console.error("Error removing document: ", error);
-                    alert(
-                      "An error occured deleting this record, please try again."
-                    );
-                  });
-              } else {
-                console.log("User cancelled deletion.");
-              }
-            }
-          });
-        });
+      datastoreService.deleteData(documentId, user)
     }
 
     return {
@@ -209,9 +141,6 @@ export default {
       geneName,
       title,
       results,
-      findDataByCardio,
-      findDataByGene,
-      findDataByTitle,
       findData,
       deleteData,
     };

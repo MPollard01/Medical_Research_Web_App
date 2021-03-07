@@ -91,6 +91,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = firebase.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const loggedOut = to.matched.some((record) => record.meta.loggedOut);
+  console.log(isAuthenticated, requiresAuth, loggedOut);
 
   if (requiresAuth && !isAuthenticated) {
     next("/login");

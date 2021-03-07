@@ -147,7 +147,7 @@
 <script>
 import { ref } from "vue";
 import firebase from "firebase";
-import { firebaseFireStore, timestamp } from "@/firebase/database";
+import { timestamp } from "@/firebase/database";
 import { useForm } from "vue-hooks-form";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Papa from "papaparse";
@@ -155,6 +155,7 @@ import Papa from "papaparse";
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
 import studyTitles from "@/assets/studyTitles";
+import datastoreService from "@/services/DatastoreService";
 
 export default {
   name: "AddData",
@@ -225,7 +226,8 @@ export default {
             createdAt: timestamp(),
             data: csv,
           };
-          firebaseFireStore.collection("cardioData").add(formData);
+          
+          datastoreService.addData(formData)
 
           csv = [];
         })
