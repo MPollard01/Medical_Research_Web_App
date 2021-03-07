@@ -88,18 +88,17 @@ const router = createRouter({
 
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = firebase.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const loggedOut = to.matched.some((record) => record.meta.loggedOut);
-  console.log(isAuthenticated, requiresAuth, loggedOut);
-
-  if (requiresAuth && !isAuthenticated) {
-    next("/login");
-  } else if (loggedOut && isAuthenticated) {
-    next("/dashboard");
-  } else {
-    next();
-  }
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user && requiresAuth) {
+      next("/login");
+    } else if (loggedOut && user)  {
+      next("/dashboard");
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;
