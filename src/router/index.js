@@ -9,6 +9,7 @@ import Dashboard from "@/views/Dashboard";
 import AddData from "@/views/AddData";
 import DeleteData from "@/views/DeleteData";
 import Newsfeed from "@/views/Newsfeed";
+import Account from "@/views/Account";
 
 const routes = [
   {
@@ -42,6 +43,14 @@ const routes = [
     path: "/reset-password",
     name: "PasswordReset",
     component: PasswordReset,
+  },
+  {
+    path: "/account",
+    name: "Account",
+    component: Account,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/dashboard",
@@ -85,7 +94,6 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
 
 router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);

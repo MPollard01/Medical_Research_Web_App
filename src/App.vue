@@ -201,4 +201,8 @@ a.button {
   top: 50%;
   z-index: 100;
 }
+
+.el-submenu i {
+  color: white !important;
+}
 </style>
