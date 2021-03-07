@@ -8,6 +8,7 @@ import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
 import AddData from "@/views/AddData";
 import DeleteData from "@/views/DeleteData";
+import Newsfeed from "@/views/Newsfeed";
 
 const routes = [
   {
@@ -62,6 +63,14 @@ const routes = [
     path: "/delete-data",
     name: "DeleteData",
     component: DeleteData,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/Newsfeed",
+    name: "Newsfeed",
+    component: Newsfeed,
     meta: {
       requiresAuth: true,
     },

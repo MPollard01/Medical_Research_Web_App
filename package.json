@@ -22,6 +22,7 @@
     "vue-hooks-form": "^0.2.2",
     "vue-loading-overlay": "^3.4.2",
     "vue-router": "^4.0.0-0",
+    "vue-rss-feed": "^0.2.4",
     "vue3-apexcharts": "^1.2.1",
     "vue3-autocomplete": "^1.0.0"
   },
