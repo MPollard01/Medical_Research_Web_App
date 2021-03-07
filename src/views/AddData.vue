@@ -221,14 +221,11 @@ export default {
             geneName: geneName.value,
             title: title.value,
             notes: notes.value,
+            createdBy: user.value.uid,
             createdAt: timestamp(),
             data: csv,
           };
-          firebaseFireStore
-            .collection("users")
-            .doc(user.value.uid)
-            .collection("cardioData")
-            .add(formData);
+          firebaseFireStore.collection("cardioData").add(formData);
 
           csv = [];
         })
