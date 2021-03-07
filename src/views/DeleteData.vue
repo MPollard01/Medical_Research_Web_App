@@ -20,6 +20,7 @@
               <el-form ref="form" label-width="180px">
                 <el-form-item label="Cardiomyopathy Type">
                   <el-select
+                    id="CardioType"
                     v-model="cardioType"
                     filterable
                     clearable
@@ -43,6 +44,7 @@
                 </el-form-item>
                 <el-form-item label="Gene Name">
                   <el-select
+                    id="GeneName"
                     v-model="geneName"
                     filterable
                     clearable
@@ -66,6 +68,7 @@
                 </el-form-item>
                 <el-form-item label="Study Title">
                   <el-select
+                    id="StudyTitle"
                     v-model="title"
                     filterable
                     clearable

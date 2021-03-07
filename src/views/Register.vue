@@ -15,6 +15,7 @@
         <h1 class="title">Register</h1>
         <div class="input-group">
           <input
+            id="email"
             type="email"
             name="email"
             v-model="email.value"
@@ -27,6 +28,7 @@
             email.error.message
           }}</span>
           <input
+            id="password"
             type="password"
             name="password"
             v-model="password.value"
@@ -39,6 +41,7 @@
             password.error.message
           }}</span>
           <input
+            id="confirmPassword"
             type="password"
             name="confirm-password"
             v-model="confirmPassword.value"

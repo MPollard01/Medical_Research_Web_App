@@ -101,10 +101,6 @@ export default {
           helpMessage.value =
             "<p>This form allows you to delete data from the database.</p><p><b>Step 1:</b> select a term from any of the options</p><p><b>Step 2:</b> click on the corresponding button to find the associated data</p>";
           break;
-        case "Newsfeed":
-          helpMessage.value = 
-            "<p>Scroll through the news feed to find the latest on cardiomyopathy.</p>"
-          break;
         default:
           helpMessage.value = "no help available.";
       }
