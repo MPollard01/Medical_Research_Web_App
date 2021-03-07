@@ -1,9 +1,9 @@
 import firebase from "firebase";
-import { firebaseAuthentication } from "@/firebase/database";
+import { firebaseAuthentication, firebaseFireStore } from "@/firebase/database";
 
 const register = async (info) => {
   let user;
-  let errors;
+  let error;
 
   try {
     const response = await firebaseAuthentication.createUserWithEmailAndPassword(
@@ -11,12 +11,26 @@ const register = async (info) => {
       info.password
     );
     user = response.user;
+
     await user.updateProfile({
+      displayName: info.name,
+      phoneNumber: info.phoneNumber,
+    });
+
+    user.value = firebase.auth().currentUser;
+
+    const userInfo = {
+      email: info.email,
       name: info.name,
       address: info.address,
       phoneNumber: info.phoneNumber,
       institution: info.institution,
-    });
+    };
+
+    firebaseFireStore
+      .collection("users")
+      .doc(user.value.uid)
+      .set(userInfo);
 
     const domain = "https://" + firebase.remoteConfig().app.options.authDomain;
 
@@ -26,18 +40,18 @@ const register = async (info) => {
 
     await user.sendEmailVerification(actionCodeSettings);
   } catch (err) {
-    errors = err.message;
+    error = err.message;
   }
 
   return {
     user,
-    errors,
+    error,
   };
 };
 
 const login = async (info) => {
   let user;
-  let errors;
+  let error;
 
   try {
     const response = await firebaseAuthentication.signInWithEmailAndPassword(
@@ -46,12 +60,12 @@ const login = async (info) => {
     );
     user = response.user;
   } catch (err) {
-    errors = err.message;
+    error = err.message;
   }
 
   return {
     user,
-    errors,
+    error,
   };
 };
 

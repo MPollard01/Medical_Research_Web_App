@@ -53,7 +53,7 @@ export default {
     async handleSelect(item) {
       this.loading = true;
       const apiData = await apiService.getApiData(item.link);
-      const datastoreData = await datastoreService.getDataByGene(this.user, item.value);
+      const datastoreData = await datastoreService.getDataByGene(item.value);
 
       if (apiData || datastoreData) {
         this.loading = false;

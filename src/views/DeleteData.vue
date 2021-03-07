@@ -20,6 +20,7 @@
               <el-form ref="form" label-width="180px">
                 <el-form-item label="Cardiomyopathy Type">
                   <el-select
+                    id="CardioType"
                     v-model="cardioType"
                     filterable
                     clearable
@@ -35,12 +36,15 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findDataByCardio"
+                  <el-button
+                    type="primary"
+                    @click="findData('cardioType', cardioType)"
                     >Find</el-button
                   >
                 </el-form-item>
                 <el-form-item label="Gene Name">
                   <el-select
+                    id="GeneName"
                     v-model="geneName"
                     filterable
                     clearable
@@ -56,12 +60,15 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findDataByGene"
+                  <el-button
+                    type="primary"
+                    @click="findData('geneName', geneName)"
                     >Find</el-button
                   >
                 </el-form-item>
                 <el-form-item label="Study Title">
                   <el-select
+                    id="StudyTitle"
                     v-model="title"
                     filterable
                     clearable
@@ -77,7 +84,7 @@
                     >
                     </el-option>
                   </el-select>
-                  <el-button type="primary" @click="findDataByTitle"
+                  <el-button type="primary" @click="findData('title', title)"
                     >Find</el-button
                   >
                 </el-form-item>
@@ -94,7 +101,7 @@
               @delete-data="deleteData"
             />
             <p v-if="!results.length">
-              No results found, please refine your search.
+              Please use one of the filters above to refine your search...
             </p>
           </el-card>
         </div>
@@ -106,14 +113,11 @@
 <script>
 import { ref } from "vue";
 import firebase from "firebase";
-import { firebaseFireStore } from "@/firebase/database";
-import moment from "moment";
-
 import DataResult from "@/components/DataResult";
-
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
 import studyTitles from "@/assets/studyTitles";
+import datastoreService from "@/services/DatastoreService";
 
 export default {
   name: "DeleteData",
@@ -127,79 +131,17 @@ export default {
     const title = ref("");
     const results = ref([]);
 
-    function findDataByCardio() {
-      findData("cardioType", cardioType.value);
-    }
-
-    function findDataByGene() {
-      findData("geneName", geneName.value);
-    }
-
-    function findDataByTitle() {
-      findData("title", title.value);
-    }
-
-    function findData(whereColumn, query) {
-      firebaseFireStore
-        .collection("users")
-        .doc(user.value.uid)
-        .collection("cardioData")
-        .where(whereColumn, "==", query)
-        .onSnapshot((snapShot) => {
-          results.value = [];
-          snapShot.forEach((doc) => {
-            console.log(doc.id + ": ");
-            console.log(doc.data());
-            var data = doc.data();
-            data.id = doc.id;
-            data.createdAt = data.createdAt.toDate();
-            results.value.push(data);
-          });
-        });
+    async function findData(whereColumn, query) {
+      results.value = await datastoreService.getDataToDelete(
+        user,
+        whereColumn,
+        query
+      );
     }
 
     function deleteData(documentId) {
-      firebaseFireStore
-        .collection("users")
-        .doc(user.value.uid)
-        .collection("cardioData")
-        .get()
-        .then((snapShot) => {
-          snapShot.forEach((doc) => {
-            if (doc.id === documentId) {
-              if (
-                confirm(
-                  "Are you sure you want to delete record with the id: " +
-                    doc.id +
-                    " ?"
-                )
-              ) {
-                console.log("Deleting...");
-                doc.ref
-                  .delete()
-                  .then(() => {
-                    const timestamp = moment().format("h:mma, Do MMMM YYYY");
-                    const message =
-                      "Record: " +
-                      doc.id +
-                      " was successfully deleted at " +
-                      timestamp +
-                      "!";
-                    console.log(message);
-                    alert(message);
-                  })
-                  .catch((error) => {
-                    console.error("Error removing document: ", error);
-                    alert(
-                      "An error occured deleting this record, please try again."
-                    );
-                  });
-              } else {
-                console.log("User cancelled deletion.");
-              }
-            }
-          });
-        });
+      datastoreService.deleteData(documentId, user);
+      results.value = [];
     }
 
     return {
@@ -211,9 +153,6 @@ export default {
       geneName,
       title,
       results,
-      findDataByCardio,
-      findDataByGene,
-      findDataByTitle,
       findData,
       deleteData,
     };

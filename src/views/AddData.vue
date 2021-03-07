@@ -20,6 +20,7 @@
               <el-form status-icon label-width="180px">
                 <el-form-item label="Phenotype">
                   <el-select
+                    id="Phenotype"
                     v-model="cardioType.value"
                     :ref="cardioType.ref"
                     filterable
@@ -41,6 +42,7 @@
                 </el-form-item>
                 <el-form-item label="Gene Name">
                   <el-select
+                    id="GeneName"
                     v-model="geneName.value"
                     :ref="geneName.ref"
                     filterable
@@ -62,6 +64,7 @@
                 </el-form-item>
                 <el-form-item label="Study Title">
                   <el-select
+                    id="StudyTitle"
                     v-model="title.value"
                     :ref="title.ref"
                     filterable
@@ -111,6 +114,7 @@
             </template>
             <div>
               <el-upload
+                id="upload"
                 class="upload-demo"
                 ref="upload"
                 action="https://jsonplaceholder.typicode.com/posts/"
@@ -127,7 +131,7 @@
                   The CSV data will be used to plot graphical charts that will
                   be displayed when this data is searched.
                 </p>
-                <el-button size="small" type="success"
+                <el-button size="small" type="success" id="UploadButton"
                   >Click to upload</el-button
                 >
                 <template #tip>
@@ -147,7 +151,7 @@
 <script>
 import { ref } from "vue";
 import firebase from "firebase";
-import { firebaseFireStore, timestamp } from "@/firebase/database";
+import { timestamp } from "@/firebase/database";
 import { useForm } from "vue-hooks-form";
 import { ElMessage, ElMessageBox } from "element-plus";
 import Papa from "papaparse";
@@ -155,6 +159,7 @@ import Papa from "papaparse";
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";
 import studyTitles from "@/assets/studyTitles";
+import datastoreService from "@/services/DatastoreService";
 
 export default {
   name: "AddData",
@@ -221,14 +226,12 @@ export default {
             geneName: geneName.value,
             title: title.value,
             notes: notes.value,
+            createdBy: user.value.uid,
             createdAt: timestamp(),
             data: csv,
           };
-          firebaseFireStore
-            .collection("users")
-            .doc(user.value.uid)
-            .collection("cardioData")
-            .add(formData);
+          
+          datastoreService.addData(formData)
 
           csv = [];
         })

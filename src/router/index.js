@@ -8,6 +8,8 @@ import PasswordReset from "@/views/PasswordReset";
 import Dashboard from "@/views/Dashboard";
 import AddData from "@/views/AddData";
 import DeleteData from "@/views/DeleteData";
+import Newsfeed from "@/views/Newsfeed";
+import Account from "@/views/Account";
 
 const routes = [
   {
@@ -43,6 +45,14 @@ const routes = [
     component: PasswordReset,
   },
   {
+    path: "/account",
+    name: "Account",
+    component: Account,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/dashboard",
     name: "Dashboard",
     component: Dashboard,
@@ -67,6 +77,14 @@ const routes = [
     },
   },
   {
+    path: "/Newsfeed",
+    name: "Newsfeed",
+    component: Newsfeed,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/:catchAll(.*)",
     redirect: "/",
   },
@@ -78,17 +96,17 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = firebase.auth().currentUser;
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
   const loggedOut = to.matched.some((record) => record.meta.loggedOut);
-
-  if (requiresAuth && !isAuthenticated) {
-    next("/login");
-  } else if (loggedOut && isAuthenticated) {
-    next("/dashboard");
-  } else {
-    next();
-  }
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user && requiresAuth) {
+      next("/login");
+    } else if (loggedOut && user)  {
+      next("/dashboard");
+    } else {
+      next();
+    }
+  });
 });
 
 export default router;

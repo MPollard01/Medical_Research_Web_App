@@ -18,7 +18,7 @@
                 <span class="card-title">Search by Term</span>
               </div>
             </template>
-          <el-form label-width="180px">
+          <el-form label-width="180px" id="terms">
               <el-form-item label="terms">
                   <el-select v-model="phenotype" @change="searchTermSelect">
                     <el-option
@@ -52,7 +52,7 @@
                 <span class="card-title">Search by Gene</span>
               </div>
             </template>
-                <el-form label-width="180px">
+                <el-form label-width="180px" id="genes">
               <el-form-item label="genes">
                   <el-select v-model="gene" @change="searchGeneSelect">
                     <el-option

@@ -16,6 +16,7 @@
         <p>Please enter your email below to request a password reset link...</p>
         <br />
         <input
+          id="email"
           type="email"
           name="email"
           v-model="email"
