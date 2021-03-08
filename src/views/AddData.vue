@@ -230,15 +230,15 @@ export default {
             createdAt: timestamp(),
             data: csv,
           };
-          
-          datastoreService.addData(formData)
+
+          datastoreService.addData(user, formData);
 
           csv = [];
         })
         .catch(() => {
           ElMessage.info({
             type: "info",
-            message: "Upload canceled",
+            message: "Upload cancelled",
           });
         });
     };
