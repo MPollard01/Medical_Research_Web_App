@@ -12,9 +12,7 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: >-
-            ${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDIOMYOPATHY_PLATFORM_66011
-            }}
-          projectId: cardiomyopathy-platform-66011
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CARDIOMYOPATHYDB }}'
+          projectId: cardiomyopathydb
         env:
           FIREBASE_CLI_PREVIEWS: hostingchannels
