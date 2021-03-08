@@ -1,6 +1,31 @@
 import { firebaseFireStore } from "@/firebase/database";
 import moment from "moment";
 import { ElMessage, ElMessageBox } from "element-plus";
+import emailjs from "emailjs-com";
+
+function sendEmail(user, subject, message) {
+  const email = user.value.email;
+  console.log("Sending email...");
+  console.log("To: " + email);
+  console.log("Subject: " + subject);
+  console.log("Message: " + message);
+
+  try {
+    emailjs.send(
+      "service_bbjlbrm",
+      "template_g9i4395",
+      {
+        email: email,
+        subject: subject,
+        message: message,
+      },
+      "user_mGTXbyOSCffZphJrE5VkG"
+    );
+    console.log("Email sent");
+  } catch (error) {
+    console.log({ error });
+  }
+}
 
 const getDataByGene = async (gene) => {
   const snapshot = await firebaseFireStore
@@ -13,8 +38,26 @@ const getDataByGene = async (gene) => {
   return graphData;
 };
 
-const addData = (formData) => {
+const addData = (user, formData) => {
   firebaseFireStore.collection("cardioData").add(formData);
+
+  const createdAt = moment().format("h:mma, Do MMMM YYYY");
+  const formattedData =
+    'Phenotype: "' +
+    formData.cardioType +
+    '", Gene Name: "' +
+    formData.geneName +
+    '", Study Title: "' +
+    formData.title +
+    '", Notes: "' +
+    formData.notes +
+    '"';
+  const emailMessage =
+    "You added the following data to our database at " +
+    createdAt +
+    "... " +
+    formattedData;
+  sendEmail(user, "Added data", emailMessage);
 };
 
 const getDataToDelete = async (user, whereColumn, query) => {
@@ -79,6 +122,14 @@ const deleteData = (documentId, user) => {
                     message: message,
                     duration: 5000,
                   });
+
+                  const emailMessage =
+                    "You deleted record " +
+                    doc.id +
+                    " from our database at " +
+                    timestamp +
+                    "!";
+                  sendEmail(user, "Deleted data", emailMessage);
                 })
                 .catch((error) => {
                   console.error("Error removing document: ", error);
@@ -91,7 +142,7 @@ const deleteData = (documentId, user) => {
                 });
             })
             .catch(() => {
-              console.log("User canceled deletion.");
+              console.log("User cancelled deletion.");
               ElMessage.info({
                 type: "info",
                 message: "Delete cancelled",
