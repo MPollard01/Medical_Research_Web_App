@@ -3,9 +3,9 @@
     <div class="wrapper">
       <h1>Welcome...</h1>
       <p class="mg-none">
-        to the Cariomyopathy Platform, a central database for all queries
+        to the Cardiomyopathy Platform, a central database for all queries
       </p>
-      <p class="mg-none">relating to Cariomyopathy research.</p>
+      <p class="mg-none">relating to Cardiomyopathy research.</p>
 
       <div class="container" v-if="user">
         <router-link to="/dashboard" tag="button" class="button"
