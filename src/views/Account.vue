@@ -11,17 +11,36 @@
           <el-form-item label="Email:">
             {{ info.email }}
           </el-form-item>
-          <el-form-item label="Name:">
-            <el-input v-model="name"></el-input>
+          <el-form-item label="Name*:">
+            <el-input
+              v-model="name"
+              type="text"
+              name="name"
+              required
+            ></el-input>
           </el-form-item>
-          <el-form-item label="Address:">
-            <el-input v-model="address"></el-input>
+          <el-form-item label="Address*:">
+            <el-input
+              v-model="address"
+              type="text"
+              name="address"
+              required
+            ></el-input>
           </el-form-item>
           <el-form-item label="Phone Number:">
-            <el-input v-model="phoneNumber"></el-input>
+            <el-input
+              v-model="phoneNumber"
+              type="text"
+              name="phone-number"
+            ></el-input>
           </el-form-item>
-          <el-form-item label="Institution:">
-            <el-input v-model="institution"></el-input>
+          <el-form-item label="Institution*:">
+            <el-input
+              v-model="institution"
+              type="text"
+              name="institution-affiliation"
+              required
+            ></el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" class="upload" @click="onSubmit"
@@ -38,6 +57,7 @@
 import { ref } from "vue";
 import firebase from "firebase";
 import { firebaseFireStore } from "@/firebase/database";
+import validation from "@/utils/Validation";
 import { ElMessage } from "element-plus";
 
 export default {
@@ -87,6 +107,20 @@ export default {
     }
 
     function onSubmit() {
+      const error = validation.finishRegister(
+        name.value,
+        address.value,
+        institution.value
+      );
+
+      if (error != null) {
+        ElMessage.error({
+          type: "error",
+          message: error,
+          duration: 5000,
+        });
+        return;
+      }
       firebaseFireStore
         .collection("users")
         .doc(user.value.uid)
@@ -136,6 +170,7 @@ export default {
 
 .content {
   margin-left: 20px;
+  margin-bottom: 50px;
   display: flex;
   text-align: left;
 }
