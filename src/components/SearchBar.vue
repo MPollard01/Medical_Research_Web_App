@@ -1,11 +1,11 @@
 <template>
   <div>
     <div v-if="loading" id="loading">
-        <img
-          id="loading-image"
-          src="../assets/ajax-loader.gif"
-          alt="Loading..."
-        />
+      <img
+        id="loading-image"
+        src="../assets/ajax-loader.gif"
+        alt="Loading..."
+      />
     </div>
     <el-autocomplete
       class="inline-input"
@@ -13,38 +13,41 @@
       :fetch-suggestions="querySearch"
       placeholder="Search gene"
       :trigger-on-focus="false"
-     @select="handleSelect"
+      @select="handleSelect"
     >
-    
     </el-autocomplete>
-    
   </div>
 </template>
 
 <script>
-import datastoreService from '@/services/DatastoreService';
-import apiService from '@/services/APIService';
-import firebase from "firebase";
+import datastoreService from "@/services/DatastoreService";
+import apiService from "@/services/APIService";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 export default {
   data() {
-      return {
-        links: [],
-        query: '',
-        loading: false,
-        user: null
-      }
+    return {
+      links: [],
+      query: "",
+      loading: false,
+      user: null,
+    };
   },
   methods: {
     querySearch(queryString, cb) {
       const links = this.links;
-      const results = queryString ? links.filter(this.createFilter(queryString)) : links;
+      const results = queryString
+        ? links.filter(this.createFilter(queryString))
+        : links;
       // call callback function to return suggestions
       cb(results);
     },
     createFilter(queryString) {
       return (link) => {
-        return (link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        return (
+          link.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+        );
       };
     },
     loadAll() {
@@ -59,15 +62,14 @@ export default {
         this.loading = false;
       }
 
-      this.$emit('handleSearch', {
+      this.$emit("handleSearch", {
         apiData,
         datastoreData,
-        name: item.value
-      })
-
-    }
+        name: item.value,
+      });
+    },
   },
-  mounted () {
+  mounted() {
     this.links = this.loadAll();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
@@ -76,11 +78,9 @@ export default {
         this.user = null;
       }
     });
-  }
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
- 
-</style>
+<style scoped></style>

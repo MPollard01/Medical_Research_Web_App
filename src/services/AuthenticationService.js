@@ -1,4 +1,5 @@
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import { firebaseAuthentication, firebaseFireStore } from "@/firebase/database";
 
 const register = async (info) => {

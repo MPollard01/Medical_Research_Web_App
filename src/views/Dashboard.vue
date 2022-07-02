@@ -38,7 +38,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import CommonChart from "@/components/CommonChart";
 import SearchBar from "@/components/SearchBar";
 import Empty from "@/components/Empty";
@@ -63,6 +64,7 @@ export default {
       console.log(value);
       advancedData.value = value;
       data.value = null;
+      showAdvancedSearch.value = false;
     }
 
     function handleShowAdvancedSearch() {

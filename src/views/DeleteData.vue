@@ -112,7 +112,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import DataResult from "@/components/DataResult";
 import cardioTypes from "@/assets/cardioTypes";
 import geneNames from "@/assets/geneNames";

@@ -55,7 +55,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import { firebaseFireStore } from "@/firebase/database";
 import validation from "@/utils/Validation";
 import { ElMessage } from "element-plus";

@@ -7,8 +7,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
-
+import firebase from "firebase/app";
+import "firebase/auth";
 import MainNav from "@/components/MainNav";
 
 export default {

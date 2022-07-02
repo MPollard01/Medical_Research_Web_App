@@ -45,7 +45,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/firebase-remote-config";
 import { firebaseAuthentication } from "@/firebase/database";
 import validation from "@/utils/Validation";
 

@@ -27,7 +27,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/firebase-auth";
 
 export default {
   name: "Home",

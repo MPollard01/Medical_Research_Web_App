@@ -2,7 +2,6 @@
   <el-menu
     class="el-menu-demo"
     mode="horizontal"
-    @select="handleSelect"
     background-color="#727eaf"
     text-color="#fff"
     active-text-color="#c28adb"
@@ -18,7 +17,7 @@
     <el-menu-item v-if="!loggedIn" index="Home">Home</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Login">Login</el-menu-item>
     <el-menu-item v-if="!loggedIn" index="Register">Register</el-menu-item>
-    <el-submenu v-if="loggedIn">
+    <el-submenu v-if="loggedIn" index="account-sub">
       <template v-if="user" #title>{{ user.email }}</template>
       <el-menu-item index="Account">Account</el-menu-item>
       <el-menu-item @click="logout" index="Logout">Logout</el-menu-item>
@@ -65,7 +64,8 @@
 <script>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 
 export default {
   name: "MainNav",
@@ -79,10 +79,6 @@ export default {
     const helpMessage = ref("");
 
     const router = useRouter();
-
-    function handleSelect(key, keyPath) {
-      console.log(key, keyPath);
-    }
 
     function handleHelp() {
       helpMenu.value = true;
@@ -141,7 +137,6 @@ export default {
       activeIndex,
       loggedIn,
       user,
-      handleSelect,
       logout,
       isCollapsed,
       activeIndex2,
@@ -158,14 +153,14 @@ export default {
     });
   },
   watch: {
-    $route(to, from) {
+    $route() {
       firebase.auth().onAuthStateChanged((user) => {
         if (user) {
           this.loggedIn = true;
           this.user = user;
         }
       });
-      console.log(to, from);
+
       this.activeIndex = this.$router.currentRoute._value.name;
     },
   },

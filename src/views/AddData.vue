@@ -118,13 +118,9 @@
                 class="upload-demo"
                 ref="upload"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :on-remove="handleRemove"
                 :on-success="handleSuccess"
-                :before-remove="beforeRemove"
                 multiple
                 :limit="3"
-                :on-exceed="handleExceed"
-                :file-list="fileList"
                 accept=".csv"
               >
                 <p>
@@ -150,7 +146,8 @@
 
 <script>
 import { ref } from "vue";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/auth";
 import { timestamp } from "@/firebase/database";
 import { useForm } from "vue-hooks-form";
 import { ElMessage, ElMessageBox } from "element-plus";
